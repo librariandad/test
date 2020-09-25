@@ -4,6 +4,7 @@
     "type": "library",
     "readme": "README.md",
     "license": "MIT",
+    "version": "0.9",
     "authors": [
         {
             "name": "Keith Engwall"
