@@ -16,7 +16,7 @@
         "psr-4": {"Medlib\\Textbooks\\": "src/textbooks" }
     },
     "autoload-dev": {
-        "psr-4": {"Medlib\\Textbooks\\": "test/textbooks" }
+        "psr-4": {"Medlib\\Textbooks\\": "tests/textbooks" }
     }
 
 }
