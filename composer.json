@@ -1,11 +1,22 @@
 {
-    "name": "medlib/test",
-    "version": "0.9",
+    "name": "medlib/textbooks",
+    "description": "parses csv textbook file into web display",
+    "type": "library",
+    "readme": "README.md",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Keith Engwall"
+        }
+    ],
     "require": {
         "monolog/monolog": "^2.1"
     },
     "autoload": {
-        "psr-4": {"Medlib\\Textbooks\\": "src/"}
+        "psr-4": {"Medlib\\Textbooks\\": "src/textbooks" }
+    },
+    "autoload-dev": {
+        "psr-4": {"Medlib\\Textbooks\\": "src/textbooks" }
     }
 
 }
