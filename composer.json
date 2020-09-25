@@ -25,7 +25,8 @@
         "psr-4": {"Medlib\\Textbooks\\": "tests/textbooks" }
     },
     "config": {
-        "bin-dir": "bin"
+        "bin-dir": "bin",
+        "sort-packages": true
     }
 
 }
