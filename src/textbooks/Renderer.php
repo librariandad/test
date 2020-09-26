@@ -20,10 +20,7 @@ declare(strict_types=1);
 namespace Medlib\Textbooks;
 
 use League\Csv;
-//use Monolog\Logger;
-//use Monolog\Handler;
 use Respect\Validation\Validator as validator;
-use Whoops\Exception\Frame;
 use Whoops\Exception\Inspector;
 use Whoops\Run;
 use Whoops\Handler\PrettyPageHandler;
@@ -40,9 +37,6 @@ class Renderer implements RendererInterface
 
     // when passed the RENDER_DEBUG string, render in debug mode
     const RENDER_DEBUG = 'DEBUG';
-//    const DEBUG_LOG_PATH = __DIR__."/../log/renderer.log";
-//    const DEBUG_LOG_LEVEL = Logger::DEBUG;
-//    const DEBUG_NUM_LOGS = 5;
 
     // when passed an invalid string, render in error mode
     const RENDER_ERROR = 'ERROR';
@@ -137,57 +131,9 @@ class Renderer implements RendererInterface
         } catch (\Throwable $t) {
             throw new \Exception("Error parsing data: ".$t->getMessage());
         }
-/*
-        // if there has been an error, display an error page
-        if ( isset($error_message) ) {
-            // if in DEBUG mode, log result
-            if ($page_id == self::RENDER_DEBUG) {
-                $log = $this->getLog($config);
-                $log->error($error_message);
-            }
 
-            // render the error page
-            $result = $this->parseData(self::RENDER_ERROR, self::ERROR_MAP, []);
-        }
-*/
         return $result;
     }
-
-    /**
-     * getLog() returns a logger for use in DEBUG mode
-     * @param array $config
-//     * @return Logger
-     * @throws \Exception
-     */
-    /*
-    private function getLog(array $config): Logger
-    {
-        // use configured log file or default
-        if ( isset($config['paths']['log']) ) {
-            $log_path = $config['paths']['log'];
-        } else {
-            $log_path = self::DEBUG_LOG_PATH;
-        }
-
-        //set handler to rotating daily log file
-        $log = new Logger('renderer_log');
-        $log->pushHandler(new Handler\RotatingFileHandler(
-            $log_path,                       // path to log
-            self::DEBUG_NUM_LOGS, // max of 5 daily log files
-            self::DEBUG_LOG_LEVEL,   // logging level
-            true,                    // bubble
-            null,               // log file permissions
-            true                  // file locking
-        ));
-        try {
-            $log->info("Started Log Handler");
-        } catch ( \Throwable $t) {
-            throw new \Exception("Error writing to log file ".$log_path.": ".$t);
-        }
-
-        return $log;
-    }
-    */
 
     /**
      * readCSV() reads a csv file into an array keyed by column headers
@@ -295,7 +241,7 @@ class Renderer implements RendererInterface
 
                 // compile list of course names textbook is used for, and append to record
                 $record['course_list'] = array();
-                $key_array = explode($delim, $record[$group_field]);
+                $key_array = explode($delim, $data[$group_field]);
                 foreach ($key_array as $course_id) {
                     array_push($record['course_list'], $courses[$course_id]);
                 }
