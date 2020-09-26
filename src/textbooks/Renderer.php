@@ -104,32 +104,24 @@ class Renderer implements RendererInterface
         $page_data = $this->readValidatedFile($map_path, 'pages');
         $page_map = $page_data['pages'];
 
-        try {
-            // read the textbook data
-            $textbook_data['records'] = $this->readCSV($data_path);
-            // get the validation methods for the data
-            $textbook_data['validation'] = $config['validation'];
-            // get the course field from the config file
-            $textbook_data['group_by'] = $config['group_by'];
-            // get the sort field for the books
-            $textbook_data['book_sort'] = $config['book_sort'];
-        } catch (\Throwable $t) {
-            throw new \Exception("Error appending config data to textbook data: ".$t->getMessage());
-        }
+        // read the textbook data
+        $textbook_data['records'] = $this->readCSV($data_path);
+        // get the validation methods for the data
+        $textbook_data['validation'] = $config['validation'];
+        // get the course field from the config file
+        $textbook_data['group_by'] = $config['group_by'];
+        // get the sort field for the books
+        $textbook_data['book_sort'] = $config['book_sort'];
 
-        try {
-            // parse the textbook data according for requested page
-            if ( $page_id == self::RENDER_DEBUG ) {
-                // render page as DEBUG
-                $result = $this->parseData($page_id, $page_map['pages'], $textbook_data);
-            } elseif ( array_key_exists($page_id, $page_map) ) {
-                // render requested page
-                $result = $this->parseData($page_id, $page_map[$page_id], $textbook_data);
-            } else {
-                throw new \Exception($page_id." not in page map.");
-            }
-        } catch (\Throwable $t) {
-            throw new \Exception("Error parsing data: ".$t->getMessage());
+        // parse the textbook data according for requested page
+        if ( $page_id == self::RENDER_DEBUG ) {
+            // render page as DEBUG
+            $result = $this->parseData($page_id, $page_map['pages'], $textbook_data);
+        } elseif ( array_key_exists($page_id, $page_map) ) {
+            // render requested page
+            $result = $this->parseData($page_id, $page_map[$page_id], $textbook_data);
+        } else {
+            throw new \Exception($page_id." not in page map.");
         }
 
         return $result;
@@ -165,12 +157,8 @@ class Renderer implements RendererInterface
     private function readValidatedFile(string $path, string $test):array
     {
         // open and decode file into an array
-        try {
-            $file = file_get_contents($path);
-            $result = json_decode($file, true);
-        } catch (\Throwable $t) {
-            throw new \Exception("Unable to include ".$path.": ".$t->getMessage());
-        }
+        $file = file_get_contents($path);
+        $result = json_decode($file, true);
 
         // check whether array contains expected key
         if ( ! isset($result[$test])) {
@@ -192,14 +180,10 @@ class Renderer implements RendererInterface
         $result = array();
         $courses = array();
 
-        try {
-            $validation_methods = $data['validation'];
-            $book_sort = $data['book_sort'];
-            $group_field = $data['group_by']['field'];
-            $delim = $data['group_by']['delim'];
-        } catch (\Throwable $t) {
-            throw new \Exception("Error in parseData: Expected array keys do not exist: ".$t->getMessage());
-        }
+        $validation_methods = $data['validation'];
+        $book_sort = $data['book_sort'];
+        $group_field = $data['group_by']['field'];
+        $delim = $data['group_by']['delim'];
 
 
         // if
@@ -224,12 +208,7 @@ class Renderer implements RendererInterface
 
                     // if the field has a validation method defined
                     if ( array_key_exists($label, $validation_methods) ) {
-                        try {
-                            $valid = $this->validateData($value, $validation_methods[$label]);
-                        } catch (\Throwable $t) {
-                            // if the method is invalid, the data was not checked, so throw an exception
-                            throw new \Exception($t);
-                        }
+                        $valid = $this->validateData($value, $validation_methods[$label]);
 
                         // if the data is invalid, store the record for debugging
                         if ( $valid == false ) {
