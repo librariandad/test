@@ -23,7 +23,8 @@ use League\Csv;
 use Monolog\Logger;
 use Monolog\Handler;
 use Respect\Validation\Validator as validator;
-use Whoops;
+use Whoops\Run;
+use Whoops\Handler\PrettyPageHandler;
 
 /**
  * @className Renderer
@@ -50,8 +51,8 @@ class Renderer implements RendererInterface
     ];
 
     public function __construct() {
-        $whoops = new Whoops\Run;
-        $whoops->pushHandler(new Whoops\Handler\PrettyPageHandler);
+        $whoops = new Run();
+        $whoops->pushHandler(new PrettyPageHandler);
         $whoops->register();
     }
 
