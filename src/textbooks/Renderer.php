@@ -75,8 +75,7 @@ class Renderer implements RendererInterface
                 $data['Previous'] = $exception->getPrevious();
                 $frames = $inspector->getFrames();
                 $data['Frame'] = array();
-                foreach ($frames as $iterator) {
-                    // $frame = new Frame($iterator);
+                foreach ($frames as $frame) {
                     $framedata['Class'] = $frame->getClass();
                     $framedata['Function'] = $frame->getFunction();
                     array_push($data['Frame'], $framedata);
@@ -100,15 +99,15 @@ class Renderer implements RendererInterface
      */
     public function render(string $page_id="M1", string $config=self::CONFIG_PATH): array
     {
+        // read configurations for file paths, sorting, validation, etc.
+        $config = $this->readValidatedFile(self::CONFIG_PATH, 'paths');
+        echo $config;
+
+        // load page map data for courses
+        $page_map = $this->readValidatedFile($config['paths']['page_map'], 'pages');
+        $page_keys = array_keys($page_map['pages']);
+
         try {
-            // read configurations for file paths, sorting, validation, etc.
-            $config = $this->readValidatedFile(self::CONFIG_PATH, 'paths');
-            echo $config;
-
-            // load page map data for courses
-            $page_map = $this->readValidatedFile($config['paths']['page_map'], 'pages');
-            $page_keys = array_keys($page_map['pages']);
-
             // read the textbook data
             $textbook_data['records'] = $this->readCSV($config['paths']['textbook_data']);
             // get the validation methods for the data
@@ -117,8 +116,11 @@ class Renderer implements RendererInterface
             $textbook_data['group_by'] = $config['group_by'];
             // get the sort field for the books
             $textbook_data['book_sort'] = $config['book_sort'];
+        } catch (\Throwable $t) {
+            throw new \Exception("Error appending config data to textbook data: ".$t);
+        }
 
-
+        try {
             // parse the textbook data according for requested page
             if ( $page_id == self::RENDER_DEBUG ) {
                 // render page as DEBUG
@@ -130,7 +132,7 @@ class Renderer implements RendererInterface
                 throw new \Exception($page_id." not in page map.");
             }
         } catch (\Throwable $e) {
-            throw new \Exception("Error rendering textbook page: ".$e->getMessage());
+            throw new \Exception("Error parsing data: ".$e->getMessage());
         }
 /*
         // if there has been an error, display an error page
