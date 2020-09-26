@@ -267,7 +267,7 @@ class Renderer implements RendererInterface
             // compile list of all courses across all years
             // so we can add course names to textbooks
             foreach ( $page_map as $key => $page) {
-                array_merge($courses, $page['map']);
+                array_merge($courses, $page);
             }
 
             //
@@ -315,7 +315,7 @@ class Renderer implements RendererInterface
 
 
         } else {
-            $courses = $page_map['map'];
+            $courses = $page_map;
         }
 
         // create an array for each course containing the course name and a book list
