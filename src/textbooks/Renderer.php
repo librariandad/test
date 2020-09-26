@@ -264,7 +264,7 @@ class Renderer implements RendererInterface
             // for each course
             foreach ($key_array as $key) {
                 // if the course is on the current page
-                if ( array_key_exists($result, $key) ) {
+                if ( array_key_exists($key, $result) ) {
                     array_push($result[$key]['book_list'], $record);
                 }
             }
