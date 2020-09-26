@@ -36,7 +36,7 @@ use Respect\Validation\Validator as validator;
 class Renderer implements RendererInterface
 {
     // config.php contains file paths and render settings
-    const CONFIG_PATH = __DIR__.'/config.php';
+    const CONFIG_PATH = __DIR__.'/../config.php';
 
     // when passed the RENDER_DEBUG string, render in debug mode
     const RENDER_DEBUG = 'DEBUG';
@@ -69,6 +69,7 @@ class Renderer implements RendererInterface
         try {
             // read configurations for file paths, sorting, validation, etc.
             $config = $this->readValidatedFile(self::CONFIG_PATH, 'paths');
+            echo $config;
 
             // load page map data for courses
             $page_map = $this->readValidatedFile($config['paths']['page_map'], 'pages');

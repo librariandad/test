@@ -1,0 +1,109 @@
+##
+# This file is part of the Medlib\Textbooks component.
+#
+# filename page_map.php contains a data map to specify
+# which sets of textbooks appear on each page.
+#
+# version: 0.1
+# author: Keith Engwall
+# copyright: (c) Oakland University William Beaumont School of Medicine Library
+# license: MIT
+##
+
+# The page map is formatted as follows:
+# pages:                  Top level element. Used to identify this as the page map file.
+#     PAGEKEY:            Page identifier. Passed into render method: render("PAGEKEY")
+#         title:          Page title
+#         description:    Page descritption
+#             - The description consists of one or more paragraphs that will
+#               display under the title and before the list of courses.
+#             - Paragraphs can span multiple lines so long as they all line up.
+#               Prepend a "-" before each new paragraph.
+#         map:            Course map.  Maps codes used in textbook data with course name
+#             COURSE1: "Title For Course Identified by code COURSE1"
+#             COURSE2: "Title For This Course"
+
+pages:
+    M1:   # PAGEKEY: Used to select page to render: $r->render("PAGEKEY")
+        title: "M1 Textbooks (2020/2021 Academic Year)"   # TITLE
+        description: # DESCRIPTION (prefix each paragraph with a "-" )
+            - The OUWB Medical Library keeps at least two
+              copies of all curricular textbooks in the KL102 Study Room.
+              Textbooks for M1 Students are listed below by course. Required
+              textbooks are denoted as such after the title. Please see your
+              syllabus for details.
+            - In addition, you can find course-related information on our
+              <a href="https://medlib.oakland.edu/guides/m1_m2_guides.php">M1/M2
+              Guides</a> page.
+            - Note: Many electronic books are only available in the most current
+              edition.
+          map:  # GROUPING MAP: Books will be grouped under each of the following
+            AFCP: "Anatomical Foundations of Clinical Practice"
+            APM12: "Art &amp; Practice of Medicine 1 &amp; 2"
+            BFCP: "Biomedical Foundations of Clinical Practice"
+            CARDIO: "Cardiovascular"
+            EMBARK: "Embark"
+            HEMATO: "Hematopoietic &amp; Lymphoid"
+            HUM: "Medical Humanities &amp; Clinical Bioethics"
+            NEURO1: "Neuroscience 1"
+            PMH: "Promotion &amp; Maintenance of Health"
+            RESP: "Respiratory"
+    M2:
+        title: "M1 Textbooks (2020/2021 Academic Year)"
+        description:
+            - The OUWB Medical Library keeps at least two
+              copies of all curricular textbooks in the KL102 Study Room.
+              Textbooks for M2 Students are listed below by course. Required
+              textbooks are denoted as such after the title. Please see your
+              syllabus for details.
+            - In addition, you can find course-related information on our
+              <a href="https://medlib.oakland.edu/guides/m1_m2_guides.php">M1/M2
+              Guides</a> page.
+            - Note: Many electronic books are only available in the most current
+              edition.
+        map:
+            APM345: "Art &amp; Practice of Medicine 3, 4 &amp; 5"
+            BEHAV: "Behavioral Science"
+            EBM: "Integrative Evidence-Based Medicine"
+            ENDO: "Endocrinology"
+            GASTRO: "Gastroenterology &amp; Hepatology"
+            HUM: "Medical Humanities &amp; Clinical Bioethics"
+            MSK: "Musculoskeletal, Connective Tissue &amp; Skin"
+            NEURO2: "Neuroscience 2"
+            PSYCH: "Psychopathology"
+            RENAL: "Renal &amp; Urinary"
+            REPRO: "Male &amp; Female Reproductive"
+
+    M3:
+        title: "M1 Textbooks (2020/2021 Academic Year"
+        description:
+            - The OUWB Medical Library keeps two copies of all
+              curricular textbooks in the KL102 Study Room. Copies of the textbooks
+              are also available in an OUWB Reserves collection at the Beaumont
+              Health System Library. Clerkship textbooks are listed below by clerkship
+              rotation. Required textbooks are denoted as such after the title.
+        map:
+            FAMMED: "Family Medicine Clerkship"
+            HUM: "Medical Humanities &amp; Clinical Bioethics"
+            INTMED: "Internal Medicine Clerkship"
+            NEUROLOGY: "Neurology Clerkship"
+            OBGYN: "OB-GYN Clerkship"
+            OPHTH: "Ophthalmology Clerkship"
+            PED: "Pediatrics Clerkship"
+            PSYCHIATRY: "Psychiatry Clerkship"
+            SURGERY: "Surgery Clerkship"
+
+    M4:
+        title: "M4 Textbooks (2020/2021 Academic Year)"
+        description:
+            - The OUWB Medical Library keeps two copies of all
+              curricular textbooks in the KL102 Study Room. Copies of the textbooks
+              are also available in an OUWB Reserves collection at the Beaumont
+              Health System Library. Clerkship textbooks are listed below by clerkship
+              rotation. Required textbooks are denoted as such after the title.'
+        map:
+            ANESTH: "Anesthesiology &amp; Pain Medicine Clerkship"
+            DIAG: "Diagnostic Medicine Clerkship"
+            EMERGENCY: "Emergency Medicine Clerkship"
+            HUM: "Medical Humanities &amp; Clinical Bioethics"
+            INTMEDM4: "Internal Medicine Sub-Internship"
