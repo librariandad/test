@@ -107,8 +107,8 @@ class Renderer implements RendererInterface
         $data_path = $base_path.$config['paths']['textbook_data'];
 
         // load page map data for courses
-        $page_map = $this->readValidatedFile($map_path, 'pages');
-        $page_keys = array_keys($page_map['pages']);
+        $page_data = $this->readValidatedFile($map_path, 'pages');
+        $page_map = $page_data['pages'];
 
         try {
             // read the textbook data
@@ -128,9 +128,9 @@ class Renderer implements RendererInterface
             if ( $page_id == self::RENDER_DEBUG ) {
                 // render page as DEBUG
                 $result = $this->parseData($page_id, $page_map['pages'], $textbook_data);
-            } elseif ( array_key_exists($page_id, $page_keys) ) {
+            } elseif ( array_key_exists($page_id, $page_map) ) {
                 // render requested page
-                $result = $this->parseData($page_id, $page_map['pages'][$page_id], $textbook_data);
+                $result = $this->parseData($page_id, $page_map[$page_id], $textbook_data);
             } else {
                 throw new \Exception($page_id." not in page map.");
             }
