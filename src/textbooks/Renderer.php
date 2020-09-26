@@ -20,9 +20,11 @@ declare(strict_types=1);
 namespace Medlib\Textbooks;
 
 use League\Csv;
-use Monolog\Logger;
-use Monolog\Handler;
+//use Monolog\Logger;
+//use Monolog\Handler;
 use Respect\Validation\Validator as validator;
+use Whoops\Exception\Frame;
+use Whoops\Exception\Inspector;
 use Whoops\Run;
 use Whoops\Handler\PrettyPageHandler;
 
@@ -38,9 +40,9 @@ class Renderer implements RendererInterface
 
     // when passed the RENDER_DEBUG string, render in debug mode
     const RENDER_DEBUG = 'DEBUG';
-    const DEBUG_LOG_PATH = __DIR__."/../log/renderer.log";
-    const DEBUG_LOG_LEVEL = Logger::DEBUG;
-    const DEBUG_NUM_LOGS = 5;
+//    const DEBUG_LOG_PATH = __DIR__."/../log/renderer.log";
+//    const DEBUG_LOG_LEVEL = Logger::DEBUG;
+//    const DEBUG_NUM_LOGS = 5;
 
     // when passed an invalid string, render in error mode
     const RENDER_ERROR = 'ERROR';
@@ -51,8 +53,38 @@ class Renderer implements RendererInterface
     ];
 
     public function __construct() {
+        // initialize error handling and format error page
+        $this->setupErrorHandling();
+    }
+
+    public function setupErrorHandling() {
         $whoops = new Run();
-        $whoops->pushHandler(new PrettyPageHandler);
+        $handler = new PrettyPageHandler();
+
+        // add details table to error page
+        $handler->addDataTableCallback(
+            'Details',
+            function(Inspector $inspector) {
+                $data = array();
+                $data['Name'] = $inspector->getExceptionName();
+                $data['Message'] = $inspector->getExceptionMessage();
+                $exception = $inspector->getException();
+                $data['Exception class'] = get_class($exception);
+                $data['Exception code'] = $exception->getCode();
+                $data['Line'] = $exception->getLine();
+                $data['Previous'] = $exception->getPrevious();
+                $frames = $inspector->getFrames();
+                $data['Frame'] = array();
+                foreach ($frames as $iterator) {
+                    $frame = new Frame($iterator);
+                    $framedata['Class'] = $frame->getClass();
+                    $framedata['Function'] = $frame->getFunction();
+                    array_push($data['Frame'], $framedata);
+                }
+                return $data;
+            }
+        );
+        $whoops->pushHandler($handler);
         $whoops->register();
     }
 
@@ -68,9 +100,6 @@ class Renderer implements RendererInterface
      */
     public function render(string $page_id="M1", string $config=self::CONFIG_PATH): array
     {
-        $config = array();
-        $result = array();
-
         try {
             // read configurations for file paths, sorting, validation, etc.
             $config = $this->readValidatedFile(self::CONFIG_PATH, 'paths');
@@ -98,13 +127,12 @@ class Renderer implements RendererInterface
                 // render requested page
                 $result = $this->parseData($page_id, $page_map['pages'][$page_id], $textbook_data);
             } else {
-                // if requested page doesn't exist, render an error page
-                $result = $this->parseData(self::RENDER_ERROR, $page_keys, []);
+                throw new \Exception($page_id." not in page map.");
             }
-        } catch (\Exception $e) {
-            $error_message = "Error rendering textbook page: ".$e->getMessage();
+        } catch (\Throwable $e) {
+            throw new \Exception("Error rendering textbook page: ".$e->getMessage());
         }
-
+/*
         // if there has been an error, display an error page
         if ( isset($error_message) ) {
             // if in DEBUG mode, log result
@@ -116,15 +144,17 @@ class Renderer implements RendererInterface
             // render the error page
             $result = $this->parseData(self::RENDER_ERROR, self::ERROR_MAP, []);
         }
-
+*/
         return $result;
     }
 
     /**
      * getLog() returns a logger for use in DEBUG mode
      * @param array $config
-     * @return Logger
+//     * @return Logger
+     * @throws \Exception
      */
+    /*
     private function getLog(array $config): Logger
     {
         // use configured log file or default
@@ -144,9 +174,15 @@ class Renderer implements RendererInterface
             null,               // log file permissions
             true                  // file locking
         ));
+        try {
+            $log->info("Started Log Handler");
+        } catch ( \Throwable $t) {
+            throw new \Exception("Error writing to log file ".$log_path.": ".$t);
+        }
 
         return $log;
     }
+    */
 
     /**
      * readCSV() reads a csv file into an array keyed by column headers
@@ -205,14 +241,19 @@ class Renderer implements RendererInterface
         $result = array();
         $courses = array();
 
-        $validation_methods = $data['validation'];
-        $book_sort = $data['book_sort'];
-        $group_field = $data['group_by']['field'];
-        $delim = $data['group_by']['delim'];
+        try {
+            $validation_methods = $data['validation'];
+            $book_sort = $data['book_sort'];
+            $group_field = $data['group_by']['field'];
+            $delim = $data['group_by']['delim'];
+        } catch (\Exception $e) {
+            throw new \Exception("Error in parseData: Expected array keys do not exist: ".$e);
+        }
+
 
         // if
         if ( $page_id == self::RENDER_ERROR) {
-            // we may not even need to call this if there was an error
+            // TODO: we may not even need to call this if there was an error
             return [];
 
         } elseif ( $page_id == self::RENDER_DEBUG ) {
