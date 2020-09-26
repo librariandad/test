@@ -136,6 +136,25 @@ class Renderer implements RendererInterface
 
     private function readCSV(string $path):array
     {
+        $csv = Csv\Reader::createFromPath('/Library/WebServer/Documents/components/test2/data/textbooks.csv', 'r');
+        $csv->setHeaderOffset(0); //valid offset but the CSV does not contain 1000 records
+        $header_offset = $csv->getHeaderOffset();
+        $headers = $csv->getHeader();
+
+        $msg = "Test: ";
+
+        $msg.= $header_offset."<br />\n";
+
+        foreach ($headers as $header) {
+            $msg.= $header.", ";
+        }
+
+        $records = $csv->getRecords();
+
+        foreach ($records as $record) {
+            $msg.= $record['Course']."<br />";
+        }
+        throw new \Exception($msg);
         // open the CSV in read mode
         $reader = Csv\Reader::createFromPath($path, 'r');
 
