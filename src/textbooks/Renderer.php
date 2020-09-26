@@ -76,7 +76,7 @@ class Renderer implements RendererInterface
                 $frames = $inspector->getFrames();
                 $data['Frame'] = array();
                 foreach ($frames as $iterator) {
-                    $frame = new Frame($iterator);
+                    // $frame = new Frame($iterator);
                     $framedata['Class'] = $frame->getClass();
                     $framedata['Function'] = $frame->getFunction();
                     array_push($data['Frame'], $framedata);
