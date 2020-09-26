@@ -104,7 +104,7 @@ class Renderer implements RendererInterface
         $page_data = $this->readValidatedFile($map_path, 'pages');
         $page_map = $page_data['pages'];
 
-        // read the textbook data
+        // get the textbook data records
         $textbook_data['records'] = $this->readCSV($data_path);
         // get the validation methods for the data
         $textbook_data['validation'] = $config['validation'];
@@ -136,34 +136,27 @@ class Renderer implements RendererInterface
 
     private function readCSV(string $path):array
     {
-        $csv = Csv\Reader::createFromPath('/Library/WebServer/Documents/components/test2/data/textbooks.csv', 'r');
-        $csv->setHeaderOffset(0); //valid offset but the CSV does not contain 1000 records
-        $header_offset = $csv->getHeaderOffset();
-        $headers = $csv->getHeader();
+        // build result array
+        $result = array();
 
-        $msg = "Test: ";
-
-        $msg.= $header_offset."<br />\n";
-
-        foreach ($headers as $header) {
-            $msg.= $header.", ";
-        }
-
-        $records = $csv->getRecords();
-
-        foreach ($records as $record) {
-            $msg.= $record['Course']."<br />";
-        }
-        throw new \Exception($msg);
         // open the CSV in read mode
         $reader = Csv\Reader::createFromPath($path, 'r');
 
         // get the column headers
         $reader->setHeaderOffset(0);
-        $reader->getHeaderOffset(); //returns 0
+        // $reader->getHeaderOffset(); //returns 0
+        $data = $reader->getRecords();
+
+        foreach($data as $row) {
+            $record = array();
+            foreach ($row as $field => $value) {
+                $record[$field] = $value;
+            }
+            array_push($result, $record);
+        }
 
         // read rows into an array, keyed to headers
-        return array($reader->getRecords());
+        return $result;
     }
 
     /**
@@ -197,30 +190,26 @@ class Renderer implements RendererInterface
     private function parseData(string $page_id, array $page_map, array $data): array
     {
         $result = array();
-        $courses = array();
+        $groups = array();
 
-        $validation_methods = $data['validation'];
         $book_sort = $data['book_sort'];
         $group_field = $data['group_by']['field'];
         $delim = $data['group_by']['delim'];
+        $records = $data['records'];
 
+        if ( $page_id == self::RENDER_DEBUG ) {
+            $validation_methods = $data['validation'];
 
-        // if
-        if ( $page_id == self::RENDER_ERROR) {
-            // TODO: we may not even need to call this if there was an error
-            return [];
-
-        } elseif ( $page_id == self::RENDER_DEBUG ) {
             // set page title
             $result['title'] = 'Textbook Report';
             // compile list of all courses across all years
             // so we can add course names to textbooks
             foreach ( $page_map as $key => $page) {
-                array_merge($courses, $page);
+                array_merge($groups, $page);
             }
 
             //
-            foreach ($data as $offset => $record) {
+            foreach ($records as $offset => $record) {
                 // check for errors in textbook data
                 $invalid_records = array();
                 foreach ($record as $label => $value) {
@@ -238,10 +227,10 @@ class Renderer implements RendererInterface
                 }
 
                 // compile list of course names textbook is used for, and append to record
-                $record['course_list'] = array();
+                $record['group_list'] = array();
                 $key_array = explode($delim, $record[$group_field]);
-                foreach ($key_array as $course_id) {
-                    array_push($record['course_list'], $courses[$course_id]);
+                foreach ($key_array as $group_id) {
+                    array_push($record['group_list'], $groups[$group_id]);
                 }
 
                 // add record to the master book list
@@ -259,17 +248,17 @@ class Renderer implements RendererInterface
 
 
         } else {
-            $courses = $page_map;
+            $groups = $page_map;
         }
 
         // create an array for each course containing the course name and a book list
-        foreach ($courses as $course_id => $course_name) {
-            $result[$course_id]['course_name'] = $course_name;
-            $result[$course_id]['book_list'] = array();
+        foreach ($groups as $group_id => $group_name) {
+            $result[$group_id]['group_name'] = $group_name;
+            $result[$group_id]['book_list'] = array();
         }
 
         // for each book that has the course id, append it to the book list
-        foreach ($data as $offset => $record) {
+        foreach ($records as $offset => $record) {
             // explode the list of courses for the textbook
             $key_array = explode($delim, $record[$group_field]);
             // for each course
