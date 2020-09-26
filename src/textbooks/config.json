@@ -2,7 +2,7 @@
   "paths": {
     "document_root": "/path/to/document/root/",
     "textbook_data": "data/textbooks.csv",
-    "page_map": "data/page_map.yml",
+    "page_map": "data/page_map.json",
     "log": "log/renderer.log"
 
   },
