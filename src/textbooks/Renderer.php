@@ -19,15 +19,11 @@ declare(strict_types=1);
 
 namespace Medlib\Textbooks;
 
-use Error;
-use Exception;
-use ErrorException;
 use League\Csv;
 use Monolog\Logger;
 use Monolog\Handler;
-use Symfony\Component\Yaml\Yaml;
-
 use Respect\Validation\Validator as validator;
+use Whoops;
 
 /**
  * @className Renderer
@@ -53,16 +49,23 @@ class Renderer implements RendererInterface
                         We apologize for the inconvenience.'
     ];
 
+    public function __construct() {
+        $whoops = new Whoops\Run;
+        $whoops->pushHandler(new Whoops\Handler\PrettyPageHandler);
+        $whoops->register();
+    }
+
     /**
      * render() produces sets of lists from textbook data, organized
      * as specified in the configuration file for the requested page
      *
-     * @param String $page_id is the page requested by the user
+     * @param string $page_id is the page requested by the user
+     * @param string $config
      * @return array formatted output
-     * @throws Exception in DEBUG mode as a means of testing the page
+     * @throws \Exception in DEBUG mode as a means of testing the page
      *                    after an update
      */
-    public function render(String $page_id="M1", String $config=self::CONFIG_PATH): array
+    public function render(string $page_id="M1", string $config=self::CONFIG_PATH): array
     {
         $config = array();
         $result = array();
@@ -97,7 +100,7 @@ class Renderer implements RendererInterface
                 // if requested page doesn't exist, render an error page
                 $result = $this->parseData(self::RENDER_ERROR, $page_keys, []);
             }
-        } catch (Exception $e) {
+        } catch (\Exception $e) {
             $error_message = "Error rendering textbook page: ".$e->getMessage();
         }
 
@@ -146,12 +149,12 @@ class Renderer implements RendererInterface
 
     /**
      * readCSV() reads a csv file into an array keyed by column headers
-     * @param String $path is the CSV file
+     * @param string $path is the CSV file
      * @return array is the data array
      * @throws Csv\Exception
      */
 
-    private function readCSV(String $path):array
+    private function readCSV(string $path):array
     {
         // open the CSV in read mode
         $reader = Csv\Reader::createFromPath($path, 'r');
@@ -166,36 +169,37 @@ class Renderer implements RendererInterface
 
     /**
      * readValidatedFile() reads a file into an array after validating it
-     * @param String $path is the path to the file
-     * @param String $test is the first expected array key
+     * @param string $path is the path to the file
+     * @param string $test is the first expected array key
      * @return array of file contents
-     * @throws Exception if unable to open file
+     * @throws \Exception if unable to open file
      */
-    private function readValidatedFile(String $path, String $test):array
+    private function readValidatedFile(string $path, string $test):array
     {
-        // try to include the file
+        // open and decode file into an array
         try {
-            $file = Yaml::parseFile($path);
-        } catch (Error $e) {
-            throw new ErrorException("Unable to include ".$path.": ".$e->getMessage());
+            $file = file_get_contents($path);
+            $result = json_decode($file, true);
+        } catch (\Error $e) {
+            throw new \ErrorException("Unable to include ".$path.": ".$e->getMessage());
         }
 
-        // check whether file contains expected array key
-        if ( ! isset($file[$test])) {
-            throw new Exception('File '.$path.' does not contain array with key '.$test);
+        // check whether array contains expected key
+        if ( ! isset($result[$test])) {
+            throw new \Exception('File '.$path.' does not contain array with key '.$test);
         }
 
-        return $file;
+        return $result;
     }
 
     /**
-     * @param $page_id
-     * @param $page_map
-     * @param $data
+     * @param string $page_id
+     * @param array $page_map
+     * @param array $data
      * @return array
-     * @throws Exception
+     * @throws \Exception
      */
-    private function parseData($page_id, $page_map, $data): array
+    private function parseData(string $page_id, array $page_map, array $data): array
     {
         $result = array();
         $courses = array();
@@ -229,9 +233,9 @@ class Renderer implements RendererInterface
                     if ( array_key_exists($label, $validation_methods) ) {
                         try {
                             $valid = $this->validateData($value, $validation_methods[$label]);
-                        } catch (Exception $e) {
+                        } catch (\Exception $e) {
                             // if the method is invalid, the data was not checked, so throw an exception
-                            throw new Exception($e);
+                            throw new \Exception($e);
                         }
 
                         // if the data is invalid, store the record for debugging
@@ -294,12 +298,12 @@ class Renderer implements RendererInterface
     /**
      * validateData() validates Textbook data based on a set of available rules
      *
-     * @param String $test is the string being validated
-     * @param String $method is the method of validation
+     * @param string $test is the string being validated
+     * @param string $method is the method of validation
      * @return bool is the result of the validation
-     * @throws Exception if $method does not match one of the available methods
+     * @throws \Exception if $method does not match one of the available methods
      */
-    private function validateData(String $test, String $method): bool
+    private function validateData(string $test, string $method): bool
     {
 
         // use the specified validation method
@@ -322,7 +326,7 @@ class Renderer implements RendererInterface
                 break;
             default:
                 // throw an exception to indicate that validation did not take place
-                throw new Exception($method." is not an available method to validate ".$test);
+                throw new \Exception($method." is not an available method to validate ".$test);
         }
 
         return $result;

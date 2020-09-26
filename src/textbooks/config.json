@@ -1,0 +1,43 @@
+{
+  "paths": {
+    "document_root": "/path/to/document/root/",
+    "textbook_data": "data/textbooks.csv",
+    "page_map": "data/page_map.yml",
+    "log": "log/renderer.log"
+
+  },
+  "group_by": {
+    "field": "Course",
+    "delim": "|"
+  },
+  "book_sort": "Author",
+  "validation": {
+    "Title": {
+      "method": "stringVal"
+    },
+    "Author": {
+      "method": "stringVal"
+    },
+    "Required": {
+      "method": "in",
+      "args": [
+        "Required",
+        "Recommended"
+      ]
+    },
+    "ISBN": {
+      "method": "isbn"
+    },
+    "URL": {
+      "method": "url"
+    },
+    "Year": {
+      "method": "date",
+      "args": "Y"
+    },
+    "Edition": {
+      "method": "regex",
+      "args": "/1st|2nd|3rd|[4-9]th|[1-9][0-9]th/"
+    }
+  }
+}
