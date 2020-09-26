@@ -220,7 +220,7 @@ class Renderer implements RendererInterface
 
                 // compile list of course names textbook is used for, and append to record
                 $record['course_list'] = array();
-                $key_array = explode($delim, $data[$group_field]);
+                $key_array = explode($delim, $record[$group_field]);
                 foreach ($key_array as $course_id) {
                     array_push($record['course_list'], $courses[$course_id]);
                 }
