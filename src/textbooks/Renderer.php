@@ -102,13 +102,17 @@ class Renderer implements RendererInterface
         // read configurations for file paths, sorting, validation, etc.
         $config = $this->readValidatedFile(self::CONFIG_PATH, 'paths');
 
+        $base_path = $config['base_path'];
+        $map_path = $base_path.$config['page_map'];
+        $data_path = $base_path.$config['textbook_data'];
+
         // load page map data for courses
-        $page_map = $this->readValidatedFile($config['paths']['page_map'], 'pages');
+        $page_map = $this->readValidatedFile($map_path, 'pages');
         $page_keys = array_keys($page_map['pages']);
 
         try {
             // read the textbook data
-            $textbook_data['records'] = $this->readCSV($config['paths']['textbook_data']);
+            $textbook_data['records'] = $this->readCSV($data_path);
             // get the validation methods for the data
             $textbook_data['validation'] = $config['validation'];
             // get the course field from the config file

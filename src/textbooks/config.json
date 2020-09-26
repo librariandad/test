@@ -1,10 +1,8 @@
 {
   "paths": {
-    "document_root": "/path/to/document/root/",
+    "base_path": "/path/to/document/root/",
     "textbook_data": "data/textbooks.csv",
-    "page_map": "data/page_map.json",
-    "log": "log/renderer.log"
-
+    "page_map": "data/page_map.json"
   },
   "group_by": {
     "field": "Course",
