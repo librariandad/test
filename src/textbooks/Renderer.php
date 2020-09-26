@@ -116,7 +116,7 @@ class Renderer implements RendererInterface
             // get the sort field for the books
             $textbook_data['book_sort'] = $config['book_sort'];
         } catch (\Throwable $t) {
-            throw new \Exception("Error appending config data to textbook data: ".$t);
+            throw new \Exception("Error appending config data to textbook data: ".$t->getMessage());
         }
 
         try {
@@ -130,8 +130,8 @@ class Renderer implements RendererInterface
             } else {
                 throw new \Exception($page_id." not in page map.");
             }
-        } catch (\Throwable $e) {
-            throw new \Exception("Error parsing data: ".$e->getMessage());
+        } catch (\Throwable $t) {
+            throw new \Exception("Error parsing data: ".$t->getMessage());
         }
 /*
         // if there has been an error, display an error page
@@ -218,8 +218,8 @@ class Renderer implements RendererInterface
         try {
             $file = file_get_contents($path);
             $result = json_decode($file, true);
-        } catch (\Error $e) {
-            throw new \ErrorException("Unable to include ".$path.": ".$e->getMessage());
+        } catch (\Throwable $t) {
+            throw new \Exception("Unable to include ".$path.": ".$t->getMessage());
         }
 
         // check whether array contains expected key
@@ -247,8 +247,8 @@ class Renderer implements RendererInterface
             $book_sort = $data['book_sort'];
             $group_field = $data['group_by']['field'];
             $delim = $data['group_by']['delim'];
-        } catch (\Exception $e) {
-            throw new \Exception("Error in parseData: Expected array keys do not exist: ".$e);
+        } catch (\Throwable $t) {
+            throw new \Exception("Error in parseData: Expected array keys do not exist: ".$t->getMessage());
         }
 
 
@@ -276,9 +276,9 @@ class Renderer implements RendererInterface
                     if ( array_key_exists($label, $validation_methods) ) {
                         try {
                             $valid = $this->validateData($value, $validation_methods[$label]);
-                        } catch (\Exception $e) {
+                        } catch (\Throwable $t) {
                             // if the method is invalid, the data was not checked, so throw an exception
-                            throw new \Exception($e);
+                            throw new \Exception($t);
                         }
 
                         // if the data is invalid, store the record for debugging
