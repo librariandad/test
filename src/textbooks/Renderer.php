@@ -25,6 +25,7 @@ use ErrorException;
 use League\Csv;
 use Monolog\Logger;
 use Monolog\Handler;
+use Symfony\Component\Yaml\Yaml;
 
 use Respect\Validation\Validator as validator;
 
@@ -174,7 +175,7 @@ class Renderer implements RendererInterface
     {
         // try to include the file
         try {
-            $file = file($path);
+            $file = Yaml::parseFile($path);
         } catch (Error $e) {
             throw new ErrorException("Unable to include ".$path.": ".$e->getMessage());
         }
