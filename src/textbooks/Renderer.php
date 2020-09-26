@@ -37,7 +37,7 @@ use Respect\Validation\Validator as validator;
 class Renderer implements RendererInterface
 {
     // config.php contains file paths and render settings
-    const CONFIG_PATH = __DIR__.'/../config.php';
+    const CONFIG_PATH = __DIR__.'/../config.yml';
 
     // when passed the RENDER_DEBUG string, render in debug mode
     const RENDER_DEBUG = 'DEBUG';

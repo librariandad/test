@@ -17,7 +17,7 @@
 # - template (php) contains the display template for textbook data
 paths:
   textbook_data: "__DIR__.'/../../data/textbooks.csv'"
-  page_map: "__DIR__.'/../../data/page_map.php'"
+  page_map: "__DIR__.'/../../data/page_map.yml'"
   log: "__DIR__.'/../../log/renderer.log'"
 
 # Specify the field in the csv that contains the keys to be used
