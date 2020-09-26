@@ -116,7 +116,7 @@ class Renderer implements RendererInterface
         // parse the textbook data according for requested page
         if ( $page_id == self::RENDER_DEBUG ) {
             // render page as DEBUG
-            $result = $this->parseData($page_id, $page_map['pages'], $textbook_data);
+            $result = $this->parseData($page_id, $page_map, $textbook_data);
         } elseif ( array_key_exists($page_id, $page_map) ) {
             // render requested page
             $result = $this->parseData($page_id, $page_map[$page_id], $textbook_data);
