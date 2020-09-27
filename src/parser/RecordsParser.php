@@ -2,22 +2,35 @@
 /**
  * This file is part of the Medlib\Textbooks component.
  *
- * @fileName Parser.php
+ * @fileName RecordsParser.php
  * @version 0.1
  * @author Keith Engwall <engwall@oakland.edu>
  * @copyright (c) Oakland University William Beaumont (OUWB) Medical Library
  * @license MIT
  *
+ * This class contains the static method parseCSV(), which will parse a
+ * CSV file of records for display on a set of one or more related webpages.
+ *
+ * Records are grouped into lists according to a set of identifiers listed in
+ * in a specified field within the CSV, and the lists are distributed among
+ * webpages according to a json page map file.
+ *
+ * Record data may be validated by a specified set of validation rules.
+ *
+ * A json configuration file provides the paths to both the record file and
+ * the page map file, as well as grouping and sorting fields, as well as validation
+ * rules.
+ *
  * This is the textbook rendering engine for the OUWB Medical Library website.
  * When the render method is passed the identifying string for a specific
  * curriculum year,it will read data from the library's textbook spreadsheet
  * and, using the configured page map, organize it for display as lists of
- * recommended and required textbooks for each course in that year.
+ * recommended and required parser for each course in that year.
  */
 
 declare(strict_types=1);
 
-namespace Medlib\Textbooks;
+namespace Medlib\Parser;
 
 use League\Csv;
 use Respect\Validation\Validator as validator;
@@ -26,17 +39,102 @@ use Whoops\Run;
 use Whoops\Handler\PrettyPageHandler;
 
 /**
- * @className Parser
+ * @className RecordsParser
  * @package Medlib\Textbooks
  * @implements RendererInterface
  */
-class Parser implements ParserInterface
+class RecordsParser implements RecordsParserInterface
 {
-    // config.php contains file paths and render settings
-    const CONFIG_PATH = __DIR__.'/config.json';
+    const CONFIG_PATH = __DIR__.'/config.json'; // configuration file
+    const PARSE_DEBUG = 'DEBUG'; // argument for debug mode
 
-    // when passed the RENDER_DEBUG string, render in debug mode
-    const PARSE_DEBUG = 'DEBUG';
+    /**
+     * The parseRecords() function is called with a page ID string, which is used to
+     * identify the set of grouping lists for the corresponding page as indicated
+     * in the page map file.
+     *
+     * An alternative path to the configuration file may also be provided.
+     *
+     * @param string $pageIdRaw is the page requested by the user
+     * @param string $configPathRaw is the path of the config file
+     * @return array textbook data organized and sorted for display
+     * @throws \Exception in DEBUG mode as a means of testing the page
+     *                    after an update
+     */
+    public static function parseRecords(string $pageIdRaw, string $configPathRaw=self::CONFIG_PATH): array
+    {
+        // sanitize inputs
+        $page_id = filter_var($pageIdRaw, FILTER_SANITIZE_STRING);
+        $config_path = filter_var($configPathRaw, FILTER_SANITIZE_STRING);
+
+        // set up error handling, read configurations, etc.
+        $config = self::bootstrap($config_path);
+
+        // get paths for textbook and course data
+        $basePath = $config['paths']['base_path'];
+        $mapPath = $basePath.$config['paths']['page_map'];
+        $data_path = $basePath.$config['paths']['textbook_data'];
+
+        // get course data
+        $page_map = self::getPageMap($mapPath);
+
+        // get textbook data
+        $textbookData = self::getTextbookData($data_path, $config);
+
+        // parse the textbook data according for requested page
+        if ( $page_id == self::PARSE_DEBUG ) {
+            // render page as DEBUG
+            $result = self::parseData($page_id, $page_map, $textbookData);
+        } elseif ( array_key_exists($page_id, $page_map) ) {
+            // render requested page
+            $result = self::parseData($page_id, $page_map[$page_id], $textbookData);
+        } else {
+            throw new \Exception($page_id." not in page map.");
+        }
+
+        return $result;
+    }
+
+    private static function bootstrap(string $config_path): array
+    {
+        // initialize error handling and format error page
+        self::setupErrorHandling();
+
+        // read configurations for file paths, sorting, validation, etc.
+        $config = self::readValidatedFile($config_path, 'paths');
+
+
+        return $config;
+    }
+
+    private static function getPageMap(string $path): array
+    {
+        // load page map data for courses
+        $page_data = self::readValidatedFile($path, 'pages');
+        return $page_data['pages'];
+    }
+
+    /**
+     * getTextbookData()
+     * @param string $path
+     * @param array $config
+     * @return array
+     * @throws Csv\Exception
+     */
+    private static function getTextbookData(string $path, array $config): array
+    {
+        $textbookData = array();
+        // get the textbook data records
+        $textbookData['records'] = self::readCSV($path);
+        // get the validation methods for the data
+        $textbookData['validation'] = $config['validation'];
+        // get the field data will be grouped by from the config file
+        $textbookData['group_by'] = $config['group_by'];
+        // get the field data will be sorted by from the config file
+        $textbookData['sort'] = $config['book_sort'];
+
+        return $textbookData;
+    }
 
     /**
      * setupErrorHandling() configures the error handler
@@ -64,58 +162,6 @@ class Parser implements ParserInterface
         $whoops->register();
     }
 
-    /**
-     * render() produces sets of lists from textbook data, organized
-     * as specified in the configuration file for the requested page
-     *
-     * @param string $page_id_raw is the page requested by the user
-     * @param string $config_path_raw is the path of the config file
-     * @return array formatted output
-     * @throws \Exception in DEBUG mode as a means of testing the page
-     *                    after an update
-     */
-    public static function parse(string $page_id_raw, string $config_path_raw=self::CONFIG_PATH): array
-    {
-
-        // initialize error handling and format error page
-        self::setupErrorHandling();
-
-        $page_id = filter_var($page_id_raw, FILTER_SANITIZE_STRING);
-        $config_path = filter_var($config_path_raw, FILTER_SANITIZE_STRING);
-
-        // read configurations for file paths, sorting, validation, etc.
-        $config = self::readValidatedFile($config_path, 'paths');
-
-        $base_path = $config['paths']['base_path'];
-        $map_path = $base_path.$config['paths']['page_map'];
-        $data_path = $base_path.$config['paths']['textbook_data'];
-
-        // load page map data for courses
-        $page_data = self::readValidatedFile($map_path, 'pages');
-        $page_map = $page_data['pages'];
-
-        // get the textbook data records
-        $textbook_data['records'] = self::readCSV($data_path);
-        // get the validation methods for the data
-        $textbook_data['validation'] = $config['validation'];
-        // get the course field from the config file
-        $textbook_data['group_by'] = $config['group_by'];
-        // get the sort field for the books
-        $textbook_data['sort'] = $config['book_sort'];
-
-        // parse the textbook data according for requested page
-        if ( $page_id == self::PARSE_DEBUG ) {
-            // render page as DEBUG
-            $result = self::parseData($page_id, $page_map, $textbook_data);
-        } elseif ( array_key_exists($page_id, $page_map) ) {
-            // render requested page
-            $result = self::parseData($page_id, $page_map[$page_id], $textbook_data);
-        } else {
-            throw new \Exception($page_id." not in page map.");
-        }
-
-        return $result;
-    }
 
     /**
      * readCSV() reads a csv file into an array keyed by column headers
@@ -196,7 +242,7 @@ class Parser implements ParserInterface
             // set page title
             $result['title'] = 'Textbook Report';
             // compile list of all courses across all years
-            // so we can add course names to textbooks
+            // so we can add course names to parser
             $groups = array();
             foreach ( $page_map as $key => $page) {
                 $groups = array_merge($groups, $page);
@@ -204,7 +250,7 @@ class Parser implements ParserInterface
 
             // initialize book list in result
             $result['book_list'] = array();
-            // go through list of textbooks
+            // go through list of parser
             foreach ($records as $offset => $record) {
                 // check for errors in textbook data
                 $invalid_records = array();

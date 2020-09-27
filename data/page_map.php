@@ -3,10 +3,10 @@
  * This file is part of the Medlib\Textbooks component.
  *
  * @filename page_map.php contains a data map to specify
- * which sets of textbooks appear on each page.
+ * which sets of parser appear on each page.
  *
  * @version 0.1
- * @configFor Parser.php
+ * @configFor RecordsParser.php
  * @author Keith Engwall
  * @copyright (c) Oakland University William Beaumont School of Medicine Library
  * @license MIT
@@ -48,9 +48,9 @@ return [
             'title' => 'M1 Textbooks (2020/2021 Academic Year)',
             'description' => [
                 'The OUWB Medical Library keeps at least two 
-            copies of all curricular textbooks in the KL102 Study Room. 
+            copies of all curricular parser in the KL102 Study Room. 
             Textbooks for M1 Students are listed below by course. Required 
-            textbooks are denoted as such after the title. Please see your 
+            parser are denoted as such after the title. Please see your 
             syllabus for details.',
             'In addition, you can find course-related information on our 
             <a href="https://medlib.oakland.edu/guides/m1_m2_guides.php">M1/M2 
@@ -76,9 +76,9 @@ return [
             'title' => 'M1 Textbooks (2020/2021 Academic Year)',
             'description' => [
                 'The OUWB Medical Library keeps at least two 
-            copies of all curricular textbooks in the KL102 Study Room. 
+            copies of all curricular parser in the KL102 Study Room. 
             Textbooks for M2 Students are listed below by course. Required 
-            textbooks are denoted as such after the title. Please see your 
+            parser are denoted as such after the title. Please see your 
             syllabus for details.',
             'In addition, you can find course-related information on our 
             <a href="https://medlib.oakland.edu/guides/m1_m2_guides.php">M1/M2 
@@ -105,10 +105,10 @@ return [
             'title' => 'M1 Textbooks (2020/2021 Academic Year)',
             'description' => [
                 'The OUWB Medical Library keeps two copies of all 
-            curricular textbooks in the KL102 Study Room. Copies of the textbooks 
+            curricular parser in the KL102 Study Room. Copies of the parser 
             are also available in an OUWB Reserves collection at the Beaumont 
-            Health System Library. Clerkship textbooks are listed below by clerkship 
-            rotation. Required textbooks are denoted as such after the title.'
+            Health System Library. Clerkship parser are listed below by clerkship 
+            rotation. Required parser are denoted as such after the title.'
             ],
             'map' => [
                 "FAMMED"     => "Family Medicine Clerkship",
@@ -127,10 +127,10 @@ return [
             'title' => 'M4 Textbooks (2020/2021 Academic Year)',
             'description' => [
                 'The OUWB Medical Library keeps two copies of all 
-            curricular textbooks in the KL102 Study Room. Copies of the textbooks 
+            curricular parser in the KL102 Study Room. Copies of the parser 
             are also available in an OUWB Reserves collection at the Beaumont 
-            Health System Library. Clerkship textbooks are listed below by clerkship 
-            rotation. Required textbooks are denoted as such after the title.'
+            Health System Library. Clerkship parser are listed below by clerkship 
+            rotation. Required parser are denoted as such after the title.'
             ],
             'map' => [
                 "ANESTH"     => "Anesthesiology &amp; Pain Medicine Clerkship",

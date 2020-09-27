@@ -6,7 +6,7 @@
  * display of textbook data.
  *
  * @version 0.1
- * @configFor Parser.php
+ * @configFor RecordsParser.php
  * @author Keith Engwall
  * @copyright (c) Oakland University William Beaumont School of Medicine Library
  * @license MIT
@@ -32,7 +32,7 @@ return [
 
     /**
      * Specify the field in the csv that contains the keys to be used
-     * for each set of textbooks (e.g. course ids) as well as (optionally)
+     * for each set of parser (e.g. course ids) as well as (optionally)
      * the delimiter used to separate the keys (e.g. '|' for 'KEY1|KEY2|KEY3')
      * If no delimiter is specified, it will be assumed that the
      * keys are comma delimited within double quotes (e.g. '"KEY1, KEY2, KEY3"')

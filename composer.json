@@ -1,5 +1,5 @@
 {
-    "name": "medlib/textbooks",
+    "name": "medlib/parser",
     "description": "parses csv textbook file into web display",
     "type": "library",
     "readme": "README.md",
@@ -23,10 +23,10 @@
         "filp/whoops": "^2.7"
     },
     "autoload": {
-        "psr-4": {"Medlib\\Textbooks\\": "src/textbooks" }
+        "psr-4": {"Medlib\\Parser\\": "src/parser"}
     },
     "autoload-dev": {
-        "psr-4": {"Medlib\\Textbooks\\": "tests/textbooks" }
+        "psr-4": {"Medlib\\Parser\\": "tests/parser" }
     },
     "config": {
         "bin-dir": "vendor/bin",
