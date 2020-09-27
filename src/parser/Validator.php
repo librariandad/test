@@ -26,7 +26,11 @@ class Validator implements ValidatorInterface
 {
 
     /**
-     * @inheritDoc
+     * validateData() validates record data based on a set of available rules
+     *
+     * @param string $data is the data value to be validated
+     * @param array $rule is the rule used to validate the data
+     * @return bool
      */
     public static function validateData(string $data, array $rule): bool
     {
@@ -39,13 +43,13 @@ class Validator implements ValidatorInterface
         // an array of arguments may be passed, which will be supplied in the given order
         // to the Respect\Validation\Validator method.
         if( isset($rule['args']) ) {  // if arguments are passed
-            $arg_set = $rule['args'];
+            $argSet = $rule['args'];
             $args = '';
-            foreach ($arg_set as $arg) {
+            foreach ($argSet as $arg) {
                 $args .= $arg.", ";
             }
-            $arg_list = preg_replace('/, $/', '', $args);
-            $result = $v->$method($arg_list)->validate($data);  // validate with arguments
+            $argList = preg_replace('/, $/', '', $args);
+            $result = $v->$method($argList)->validate($data);  // validate with arguments
         } else {
             $result = $v->$method()->validate($data);  // otherwise validate without arguments
         }

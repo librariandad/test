@@ -8,7 +8,7 @@
  * @copyright (c) Oakland University William Beaumont (OUWB) Medical Library
  * @license MIT
  * 
- * @expects a json configuration file (default path: __DIR__."/config.json")
+ * @expects a json configuration file (default path: __DIR__."/config.json.example")
  * @expects a json page map file containing a top level key {'pages': 
  * @expects a CSV spreadsheet of records with a header row of field names
  * 
@@ -34,8 +34,6 @@ declare(strict_types=1);
 
 namespace Medlib\Parser;
 
-use League\Csv\Exception;
-
 /**
  * @className RecordsParser
  * @package Medlib\Textbooks
@@ -43,7 +41,7 @@ use League\Csv\Exception;
  */
 class RecordsParser implements RecordsParserInterface
 {
-    const CONFIG_PATH = __DIR__.'/config.json'; // configuration file
+    const CONFIG_PATH = __DIR__ . '/config.json'; // configuration file
     const PARSE_DEBUG = 'DEBUG'; // argument for debug mode
 
     /**
@@ -103,7 +101,7 @@ class RecordsParser implements RecordsParserInterface
      * @param string $path
      * @param array $config
      * @return array
-     * @throws Exception
+     * @throws \Exception
      */
     private static function getRecordData(string $path, array $config): array
     {
