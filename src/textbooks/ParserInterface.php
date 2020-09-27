@@ -4,7 +4,7 @@
 namespace Medlib\Textbooks;
 
 
-interface RendererInterface
+interface ParserInterface
 {
     public function render(String $path, String $config):array;
 }

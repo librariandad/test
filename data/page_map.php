@@ -6,7 +6,7 @@
  * which sets of textbooks appear on each page.
  *
  * @version 0.1
- * @configFor Renderer.php
+ * @configFor Parser.php
  * @author Keith Engwall
  * @copyright (c) Oakland University William Beaumont School of Medicine Library
  * @license MIT

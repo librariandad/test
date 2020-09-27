@@ -2,7 +2,7 @@
 /**
  * This file is part of the Medlib\Textbooks component.
  *
- * @fileName Renderer.php
+ * @fileName Parser.php
  * @version 0.1
  * @author Keith Engwall <engwall@oakland.edu>
  * @copyright (c) Oakland University William Beaumont (OUWB) Medical Library
@@ -26,28 +26,22 @@ use Whoops\Run;
 use Whoops\Handler\PrettyPageHandler;
 
 /**
- * @className Renderer
+ * @className Parser
  * @package Medlib\Textbooks
  * @implements RendererInterface
  */
-class Renderer implements RendererInterface
+class Parser implements ParserInterface
 {
     // config.php contains file paths and render settings
     const CONFIG_PATH = __DIR__.'/config.json';
 
     // when passed the RENDER_DEBUG string, render in debug mode
-    const RENDER_DEBUG = 'DEBUG';
-
-    // when passed an invalid string, render in error mode
-    const RENDER_ERROR = 'ERROR';
-    const ERROR_MAP = [
-        'title' => 'Sorry! There has been an error!',
-        'description' => 'Please contact the webmaster at medref@oakland.edu.
-                        We apologize for the inconvenience.'
-    ];
+    const PARSE_DEBUG = 'DEBUG';
 
     // needed for sorting book list
     private $book_sort;
+
+
 
     public function __construct() {
         // initialize error handling and format error page
@@ -73,9 +67,9 @@ class Renderer implements RendererInterface
                 $frames = $inspector->getFrames();
                 $data['Frame'] = array();
                 foreach ($frames as $frame) {
-                    $framedata['Class'] = $frame->getClass();
-                    $framedata['Function'] = $frame->getFunction();
-                    array_push($data['Frame'], $framedata);
+                    $frame_data['Class'] = $frame->getClass();
+                    $frame_data['Function'] = $frame->getFunction();
+                    array_push($data['Frame'], $frame_data);
                 }
                 return $data;
             }
@@ -94,7 +88,7 @@ class Renderer implements RendererInterface
      * @throws \Exception in DEBUG mode as a means of testing the page
      *                    after an update
      */
-    public function render(string $page_id_raw="M1", string $config_path_raw=self::CONFIG_PATH): array
+    public function render(string $page_id_raw, string $config_path_raw=self::CONFIG_PATH): array
     {
 
         $page_id = filter_var($page_id_raw, FILTER_SANITIZE_STRING);
@@ -121,7 +115,7 @@ class Renderer implements RendererInterface
         $textbook_data['book_sort'] = $config['book_sort'];
 
         // parse the textbook data according for requested page
-        if ( $page_id == self::RENDER_DEBUG ) {
+        if ( $page_id == self::PARSE_DEBUG ) {
             // render page as DEBUG
             $result = $this->parseData($page_id, $page_map, $textbook_data);
         } elseif ( array_key_exists($page_id, $page_map) ) {
@@ -206,7 +200,7 @@ class Renderer implements RendererInterface
         $records = $data['records'];
 
         //for the debug version of the page
-        if ( $page_id == self::RENDER_DEBUG ) {
+        if ( $page_id == self::PARSE_DEBUG ) {
             //pull in validation settings from configuration
             $validation_methods = $data['validation'];
 
@@ -289,9 +283,10 @@ class Renderer implements RendererInterface
         });
 
         // sort books in each course
-        foreach ($result as $course => $book_list) {
-            usort($book_list, function($a,$b) {
-                return $a[$this->book_sort] <=> $b[$this->book_sort];
+        foreach ($result as $course => $array) {
+            usort($result[$course]['book_list'], function($a, $b) {
+                $book_sort = $this->book_sort;
+                return $a[$book_sort] <=> $b[$book_sort];
             });
         }
 
