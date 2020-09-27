@@ -189,34 +189,37 @@ class Renderer implements RendererInterface
      */
     private function parseData(string $page_id, array $page_map, array $data): array
     {
+        // create array for result
         $result = array();
-        $groups = array();
 
+        //pull in configurations
         $book_sort = $data['book_sort'];
         $group_field = $data['group_by']['field'];
         $delim = $data['group_by']['delim'];
         $records = $data['records'];
 
+        //for the debug version of the page
         if ( $page_id == self::RENDER_DEBUG ) {
+            //pull in validation settings from configuration
             $validation_methods = $data['validation'];
 
             // set page title
             $result['title'] = 'Textbook Report';
             // compile list of all courses across all years
             // so we can add course names to textbooks
+            $groups = array();
             foreach ( $page_map as $key => $page) {
-                array_merge($groups, $page);
+                $groups = array_merge($groups, $page);
             }
 
-            //
+            // go through list of textbooks
             foreach ($records as $offset => $record) {
                 // check for errors in textbook data
                 $invalid_records = array();
                 foreach ($record as $label => $value) {
 
-                    // if the field has a validation method defined
+                    // if the field has a validation method defined, validate the value
                     if ( array_key_exists($label, $validation_methods) ) {
-                        // TODO: review validation section of config.json and update validation method
                         $valid = $this->validateData($value, $validation_methods[$label]);
 
                         // if the data is invalid, store the record for debugging
@@ -226,6 +229,9 @@ class Renderer implements RendererInterface
                     }
 
                 }
+
+                // store invalid records in the result array
+                $result['invalid'] = $invalid_records;
 
                 // compile list of course names textbook is used for, and append to record
                 $record['group_list'] = array();
@@ -242,12 +248,12 @@ class Renderer implements RendererInterface
                 }
             }
 
+            // sort book_list
+            usort($result['book_list'], function($a, $b, $book_sort) {
+                return $a[$book_sort] <=> $b[$book_sort];
+            });
 
-            // TODO: Sort array
             return $result;
-
-
-
         } else {
             $groups = $page_map;
         }
@@ -271,7 +277,9 @@ class Renderer implements RendererInterface
             }
         }
 
-        // TODO: sort array
+        usort($result, function($a, $b, $book_sort) {
+            return $a[$book_sort] <=> $b[$book_sort];
+        });
 
         return $result;
     }
@@ -303,5 +311,4 @@ class Renderer implements RendererInterface
 
         return $result;
     }
-
 }
