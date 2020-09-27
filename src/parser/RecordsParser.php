@@ -255,7 +255,7 @@ class RecordsParser implements RecordsParserInterface
                         $valid = Validator::validateData($value, $validationRules[$label]);
                         // if the data is invalid, store the record and the corresponding label for debugging
                         if ($valid == false) {
-                            $record[$offset]['invalidField'] = $label;
+                            $record['invalidField'] = $label;
                             array_push( $invalidRecords, $record);
                         }
                     }
