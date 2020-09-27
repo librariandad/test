@@ -41,14 +41,17 @@ class Parser implements ParserInterface
     // needed for sorting book list
     private $book_sort;
 
-
-
     public function __construct() {
         // initialize error handling and format error page
         $this->setupErrorHandling();
     }
 
+    /**
+     * setupErrorHandling() configures the error handler
+     */
     public function setupErrorHandling() {
+
+        // initialize error handler
         $whoops = new Run();
         $handler = new PrettyPageHandler();
 
@@ -57,20 +60,11 @@ class Parser implements ParserInterface
             'Details',
             function(Inspector $inspector) {
                 $data = array();
-                $data['Name'] = $inspector->getExceptionName();
                 $data['Message'] = $inspector->getExceptionMessage();
                 $exception = $inspector->getException();
                 $data['Exception class'] = get_class($exception);
                 $data['Exception code'] = $exception->getCode();
                 $data['Line'] = $exception->getLine();
-                $data['Previous'] = $exception->getPrevious();
-                $frames = $inspector->getFrames();
-                $data['Frame'] = array();
-                foreach ($frames as $frame) {
-                    $frame_data['Class'] = $frame->getClass();
-                    $frame_data['Function'] = $frame->getFunction();
-                    array_push($data['Frame'], $frame_data);
-                }
                 return $data;
             }
         );
