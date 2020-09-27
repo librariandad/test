@@ -47,7 +47,7 @@ class Renderer implements RendererInterface
     ];
 
     // needed for sorting book list
-    private string $book_sort;
+    private $book_sort;
 
     public function __construct() {
         // initialize error handling and format error page
@@ -88,16 +88,20 @@ class Renderer implements RendererInterface
      * render() produces sets of lists from textbook data, organized
      * as specified in the configuration file for the requested page
      *
-     * @param string $page_id is the page requested by the user
-     * @param string $config
+     * @param string $page_id_raw is the page requested by the user
+     * @param string $config_path_raw is the path of the config file
      * @return array formatted output
      * @throws \Exception in DEBUG mode as a means of testing the page
      *                    after an update
      */
-    public function render(string $page_id="M1", string $config=self::CONFIG_PATH): array
+    public function render(string $page_id_raw="M1", string $config_path_raw=self::CONFIG_PATH): array
     {
+
+        $page_id = filter_var($page_id_raw, FILTER_SANITIZE_STRING);
+        $config_path = filter_var($config_path_raw, FILTER_SANITIZE_STRING);
+
         // read configurations for file paths, sorting, validation, etc.
-        $config = $this->readValidatedFile(self::CONFIG_PATH, 'paths');
+        $config = $this->readValidatedFile($config_path, 'paths');
 
         $base_path = $config['paths']['base_path'];
         $map_path = $base_path.$config['paths']['page_map'];
