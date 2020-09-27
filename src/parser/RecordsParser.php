@@ -250,13 +250,16 @@ class RecordsParser implements RecordsParserInterface
 
                 // if the field has a validation method defined, validate the value
                 if (array_key_exists($label, $validationRules)) {
-                    $valid = Validator::validateData($value, $validationRules[$label]);
-
-                    // if the data is invalid, store the record and the corresponding label for debugging
-                    if ($valid == false) {
-                        $record[$offset]['invalidField'] = $label;
-                        array_push( $invalidRecords, $record);
+                    // if the field contains data
+                    if ( ! $value == '') {
+                        $valid = Validator::validateData($value, $validationRules[$label]);
+                        // if the data is invalid, store the record and the corresponding label for debugging
+                        if ($valid == false) {
+                            $record[$offset]['invalidField'] = $label;
+                            array_push( $invalidRecords, $record);
+                        }
                     }
+
                 }
 
             }
