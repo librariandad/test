@@ -101,16 +101,13 @@ class RecordsParser implements RecordsParserInterface
         self::setupErrorHandling();
 
         // read configurations for file paths, sorting, validation, etc.
-        $config = self::readValidatedFile($config_path, 'paths');
-
-
-        return $config;
+        return self::readJSON($config_path, 'paths');
     }
 
     private static function getPageMap(string $path): array
     {
         // load page map data for courses
-        $page_data = self::readValidatedFile($path, 'pages');
+        $page_data = self::readJSON($path, 'pages');
         return $page_data['pages'];
     }
 
@@ -196,13 +193,15 @@ class RecordsParser implements RecordsParserInterface
     }
 
     /**
-     * readValidatedFile() reads a file into an array after validating it
+     * readJSON() reads a file into an array after validating it
+     * by checking for a top level key
+     * 
      * @param string $path is the path to the file
      * @param string $test is the first expected array key
      * @return array of file contents
      * @throws \Exception if unable to open file
      */
-    private static function readValidatedFile(string $path, string $test):array
+    private static function readJSON(string $path, string $test):array
     {
         // open and decode file into an array
         $file = file_get_contents($path);
