@@ -254,7 +254,7 @@ class RecordsParser implements RecordsParserInterface
 
                     // if the data is invalid, store the record and the corresponding label for debugging
                     if ($valid == false) {
-                        array_push($invalidRecords, ["label" => $label, "record" = $record]);
+                        array_push($invalidRecords, ['label' => $label, 'record' => $record]);
                     }
                 }
 
