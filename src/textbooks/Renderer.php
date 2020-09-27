@@ -241,11 +241,7 @@ class Renderer implements RendererInterface
                 }
 
                 // add record to the master book list
-                if ( isset($result['book_list'][$record[$book_sort]]) ) {
-                    array_push($result['book_list'][$record[$book_sort]], $record);
-                } else {
-                    $result['book_list'][$record[$book_sort]] = array($record);
-                }
+                array_push($result['book_list'], $record);
             }
 
             // sort book_list
@@ -299,8 +295,9 @@ class Renderer implements RendererInterface
         $method = $rule['method'];
 
         if( isset($rule['args']) ) {
+            $arg_set = $rule['args'];
             $args = '';
-            foreach ($rule['args'] as $arg) {
+            foreach ($arg_set as $arg) {
                 $args .= $arg.", ";
             }
             $arg_list = preg_replace('/, $/', '', $args);
