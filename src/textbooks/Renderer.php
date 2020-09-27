@@ -216,6 +216,7 @@ class Renderer implements RendererInterface
 
                     // if the field has a validation method defined
                     if ( array_key_exists($label, $validation_methods) ) {
+                        // TODO: review validation section of config.json and update validation method
                         $valid = $this->validateData($value, $validation_methods[$label]);
 
                         // if the data is invalid, store the record for debugging
@@ -279,34 +280,25 @@ class Renderer implements RendererInterface
      * validateData() validates Textbook data based on a set of available rules
      *
      * @param string $test is the string being validated
-     * @param string $method is the method of validation
+     * @param array $rule is the method of validation
      * @return bool is the result of the validation
      * @throws \Exception if $method does not match one of the available methods
      */
-    private function validateData(string $test, string $method): bool
+    private function validateData(string $test, array $rule): bool
     {
+        $v = new validator();
 
-        // use the specified validation method
-        switch($method)
-        {
-            case 'string':
-                $result = validator::stringVal()->validate($test);
-                break;
-            case 'isbn':
-                $result = validator::isbn()->validate($test);
-                break;
-            case 'url':
-                $result = validator::url()->validate($test);
-                break;
-            case 'year':
-                $result = validator::date("Y")->validate($test);
-                break;
-            case 'edition':
-                $result = validator::regex("/1st|2nd|3rd|[4-9]th|[1-9][0-9]th/")->validate($test);
-                break;
-            default:
-                // throw an exception to indicate that validation did not take place
-                throw new \Exception($method." is not an available method to validate ".$test);
+        $method = $rule['method'];
+
+        if( isset($rule['args']) ) {
+            $args = '';
+            foreach ($rule['args'] as $arg) {
+                $args .= $arg.", ";
+            }
+            $arg_list = preg_replace('/, $/', '', $args);
+            $result = $v->$method($arg_list)->validate($test);
+        } else {
+            $result = $v->$method()->validate($test);
         }
 
         return $result;
