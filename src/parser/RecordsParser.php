@@ -163,7 +163,7 @@ class RecordsParser implements RecordsParserInterface
             // validate the record data and store invalid records for the report
             $validationRules = $data['validation'];
             $invalidRecords = self::validate($records, $validationRules);
-            $result['invalid'] = self::bookSort($invalidRecords, $sortField);
+            $result['invalid'] = self::recordSort(array_values($invalidRecords), $sortField);
             
             // compile list of all listing groups in page map
             $groups = array();
@@ -188,7 +188,7 @@ class RecordsParser implements RecordsParserInterface
             }
 
             // sort record list
-            $result['recordList'] = self::bookSort($result['recordList'], $sortField);
+            $result['recordList'] = self::recordSort($result['recordList'], $sortField);
 
         // if the page id exists in the page map, create lists of records for each group in that page
         } elseif ( array_key_exists($pageID, $pageMap) ) {
@@ -219,7 +219,7 @@ class RecordsParser implements RecordsParserInterface
 
             // sort the records in each group by the sorting field
             foreach ($result as $course => $array) {
-                $result[$course]['recordList'] = self::bookSort($result[$course]['recordList'], $sortField);
+                $result[$course]['recordList'] = self::recordSort($result[$course]['recordList'], $sortField);
             }
         } else {
             // if the page ID is not in the page map then throw an exception
@@ -254,7 +254,7 @@ class RecordsParser implements RecordsParserInterface
 
                     // if the data is invalid, store the record and the corresponding label for debugging
                     if ($valid == false) {
-                        array_push($invalidRecords, ['label' => $label, 'record' => $record]);
+                        array_push($invalidRecords, [$label => $record]);
                     }
                 }
 
@@ -271,7 +271,7 @@ class RecordsParser implements RecordsParserInterface
      * @param string $sortField is the field by which to sort the records
      * @return array of sorted records
      */
-    private static function bookSort(array $recordList, string $sortField): array
+    private static function recordSort(array $recordList, string $sortField): array
     {
         usort($recordList, function($a, $b) use ($sortField) {
             return $a[$sortField] <=> $b[$sortField];
