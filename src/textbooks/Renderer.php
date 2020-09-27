@@ -283,10 +283,17 @@ class Renderer implements RendererInterface
             }
         }
 
+        // sort result array by courses
         usort($result, function($a, $b) {
-            $book_sort = $this->book_sort;
-            return $a[$book_sort] <=> $b[$book_sort];
+            return $a <=> $b;
         });
+
+        // sort books in each course
+        foreach ($result as $course => $book_list) {
+            usort($book_list, function($a,$b) {
+                return $a[$this->book_sort] <=> $b[$this->book_sort];
+            });
+        }
 
         return $result;
     }
