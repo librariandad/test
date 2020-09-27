@@ -11,7 +11,10 @@
 
 namespace Medlib\Parser;
 
-
+/**
+ * Interface BootstrapInterface
+ * @package Medlib\Parser
+ */
 interface BootstrapInterface
 {
     /**

@@ -25,18 +25,21 @@ use Whoops\Run;
  */
 class Bootstrap implements BootstrapInterface
 {
-
     /**
-     * @inheritDoc
+     * bootstrap() sets up error handling and reads the configuration file
+     * and returns a config array.
+     *
+     * @param string $path of the configuration file
+     * @return array of configurations
+     * @throws \Exception if unable to read configuration file
      */
-    public static function bootstrap(string $config_path): array
+    public static function bootstrap(string $path): array
     {
-        // TODO: Implement bootstrap() method.
         // initialize error handling and format error page
         self::setupErrorHandling();
 
         // read configurations for file paths, sorting, validation, etc.
-        return self::readJSON($config_path, 'paths');
+        return FileReader::readJSON($path, 'paths');
     }
 
     /**
