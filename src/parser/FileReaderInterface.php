@@ -24,11 +24,11 @@ interface FileReaderInterface
      * that the expected header fields are present.
      *
      * @param string $path is the path to the CSV file
-     * @param string $groupBy is the header label containing grouping data (checking
+     * @param string $groupBy is the header label containing grouping data
      * @param string $sortField is the header label for the sorting field
      * @return array of records
      */
-    public static function readCSV(string $path, string $groupBy, string $sortField):array;
+    public static function readCSV(string $path, array $groupBy, string $sortField):array;
 
     /**
      * readJSON() reads a json file and checks it for the expected top-level element.

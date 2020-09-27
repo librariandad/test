@@ -111,7 +111,7 @@ class RecordsParser implements RecordsParserInterface
     {
         $recordData = array();
         // get the textbook data records
-        $recordData['records'] = FileReader::readCSV($path, $config['groupBy'], $config['sortField']);
+        $recordData['records'] = FileReader::readCSV($path, $config['groupBy']['field'], $config['sortField']);
         // get the validation methods for the data
         $recordData['validation'] = $config['validation'];
         // get the field data will be grouped by from the config file
