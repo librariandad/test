@@ -34,7 +34,7 @@ class Validator implements ValidatorInterface
      */
     public static function validateData(string $data, array $rule): bool
     {
-        $v = new \Respect\Validation\Validator(); // initialize validator
+        $validator = new \Respect\Validation\Validator(); // initialize validator
 
         // the method specified in the configuration is called as a variable method
         // and thus must match a Respect\Validation\Validator method.
@@ -49,9 +49,9 @@ class Validator implements ValidatorInterface
                 $args .= $arg.", ";
             }
             $argList = preg_replace('/, $/', '', $args);
-            $result = $v->$method($argList)->validate($data);  // validate with arguments
+            $result = $validator->$method($argList)->validate($data);  // validate with arguments
         } else {
-            $result = $v->$method()->validate($data);  // otherwise validate without arguments
+            $result = $validator->$method()->validate($data);  // otherwise validate without arguments
         }
 
         return $result;
