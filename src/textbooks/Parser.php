@@ -38,18 +38,10 @@ class Parser implements ParserInterface
     // when passed the RENDER_DEBUG string, render in debug mode
     const PARSE_DEBUG = 'DEBUG';
 
-    // needed for sorting book list
-    private $book_sort;
-
-    public function __construct() {
-        // initialize error handling and format error page
-        $this->setupErrorHandling();
-    }
-
     /**
      * setupErrorHandling() configures the error handler
      */
-    public function setupErrorHandling() {
+    private static function setupErrorHandling() {
 
         // initialize error handler
         $whoops = new Run();
@@ -82,39 +74,42 @@ class Parser implements ParserInterface
      * @throws \Exception in DEBUG mode as a means of testing the page
      *                    after an update
      */
-    public function render(string $page_id_raw, string $config_path_raw=self::CONFIG_PATH): array
+    public static function parse(string $page_id_raw, string $config_path_raw=self::CONFIG_PATH): array
     {
+
+        // initialize error handling and format error page
+        self::setupErrorHandling();
 
         $page_id = filter_var($page_id_raw, FILTER_SANITIZE_STRING);
         $config_path = filter_var($config_path_raw, FILTER_SANITIZE_STRING);
 
         // read configurations for file paths, sorting, validation, etc.
-        $config = $this->readValidatedFile($config_path, 'paths');
+        $config = self::readValidatedFile($config_path, 'paths');
 
         $base_path = $config['paths']['base_path'];
         $map_path = $base_path.$config['paths']['page_map'];
         $data_path = $base_path.$config['paths']['textbook_data'];
 
         // load page map data for courses
-        $page_data = $this->readValidatedFile($map_path, 'pages');
+        $page_data = self::readValidatedFile($map_path, 'pages');
         $page_map = $page_data['pages'];
 
         // get the textbook data records
-        $textbook_data['records'] = $this->readCSV($data_path);
+        $textbook_data['records'] = self::readCSV($data_path);
         // get the validation methods for the data
         $textbook_data['validation'] = $config['validation'];
         // get the course field from the config file
         $textbook_data['group_by'] = $config['group_by'];
         // get the sort field for the books
-        $textbook_data['book_sort'] = $config['book_sort'];
+        $textbook_data['sort'] = $config['book_sort'];
 
         // parse the textbook data according for requested page
         if ( $page_id == self::PARSE_DEBUG ) {
             // render page as DEBUG
-            $result = $this->parseData($page_id, $page_map, $textbook_data);
+            $result = self::parseData($page_id, $page_map, $textbook_data);
         } elseif ( array_key_exists($page_id, $page_map) ) {
             // render requested page
-            $result = $this->parseData($page_id, $page_map[$page_id], $textbook_data);
+            $result = self::parseData($page_id, $page_map[$page_id], $textbook_data);
         } else {
             throw new \Exception($page_id." not in page map.");
         }
@@ -129,7 +124,7 @@ class Parser implements ParserInterface
      * @throws Csv\Exception
      */
 
-    private function readCSV(string $path):array
+    private static function readCSV(string $path):array
     {
         // build result array
         $result = array();
@@ -161,7 +156,7 @@ class Parser implements ParserInterface
      * @return array of file contents
      * @throws \Exception if unable to open file
      */
-    private function readValidatedFile(string $path, string $test):array
+    private static function readValidatedFile(string $path, string $test):array
     {
         // open and decode file into an array
         $file = file_get_contents($path);
@@ -182,13 +177,13 @@ class Parser implements ParserInterface
      * @return array
      * @throws \Exception
      */
-    private function parseData(string $page_id, array $page_map, array $data): array
+    private static function parseData(string $page_id, array $page_map, array $data): array
     {
         // create array for result
         $result = array();
 
         //pull in configurations
-        $this->book_sort = $data['book_sort'];
+        $sort_field = $data['sort'];
         $group_field = $data['group_by']['field'];
         $delim = $data['group_by']['delim'];
         $records = $data['records'];
@@ -217,7 +212,7 @@ class Parser implements ParserInterface
 
                     // if the field has a validation method defined, validate the value
                     if ( array_key_exists($label, $validation_methods) ) {
-                        $valid = $this->validateData($value, $validation_methods[$label]);
+                        $valid = self::validateData($value, $validation_methods[$label]);
 
                         // if the data is invalid, store the record for debugging
                         if ( $valid == false ) {
@@ -242,10 +237,7 @@ class Parser implements ParserInterface
             }
 
             // sort book_list
-            usort($result['book_list'], function($a, $b) {
-                $book_sort = $this->book_sort;
-                return $a[$book_sort] <=> $b[$book_sort];
-            });
+            $result['book_list'] = self::bookSort($result['book_list'], $sort_field);
 
             return $result;
         } else {
@@ -278,10 +270,7 @@ class Parser implements ParserInterface
 
         // sort books in each course
         foreach ($result as $course => $array) {
-            usort($result[$course]['book_list'], function($a, $b) {
-                $book_sort = $this->book_sort;
-                return $a[$book_sort] <=> $b[$book_sort];
-            });
+            $result[$course]['book_list'] = self::bookSort($result[$course]['book_list'], $sort_field);
         }
 
         return $result;
@@ -295,7 +284,7 @@ class Parser implements ParserInterface
      * @return bool is the result of the validation
      * @throws \Exception if $method does not match one of the available methods
      */
-    private function validateData(string $test, array $rule): bool
+    private static function validateData(string $test, array $rule): bool
     {
         $v = new validator();
 
@@ -314,5 +303,20 @@ class Parser implements ParserInterface
         }
 
         return $result;
+    }
+
+    /**
+     * bookSort() sorts a list of books by the specified field
+     * @param array $book_list
+     * @param string $sort_field
+     * @return array
+     */
+    private static function bookSort(array $book_list, string $sort_field): array
+    {
+        usort($book_list, function($a, $b) use ($sort_field) {
+            return $a[$sort_field] <=> $b[$sort_field];
+        });
+
+        return $book_list;
     }
 }

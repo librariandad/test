@@ -6,5 +6,5 @@ namespace Medlib\Textbooks;
 
 interface ParserInterface
 {
-    public function render(String $path, String $config):array;
+    public static function parse(String $path, String $config):array;
 }
