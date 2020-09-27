@@ -46,6 +46,9 @@ class Renderer implements RendererInterface
                         We apologize for the inconvenience.'
     ];
 
+    // needed for sorting book list
+    private string $book_sort;
+
     public function __construct() {
         // initialize error handling and format error page
         $this->setupErrorHandling();
@@ -193,7 +196,7 @@ class Renderer implements RendererInterface
         $result = array();
 
         //pull in configurations
-        $book_sort = $data['book_sort'];
+        $this->book_sort = $data['book_sort'];
         $group_field = $data['group_by']['field'];
         $delim = $data['group_by']['delim'];
         $records = $data['records'];
@@ -247,7 +250,8 @@ class Renderer implements RendererInterface
             }
 
             // sort book_list
-            usort($result['book_list'], function($a, $b, $book_sort) {
+            usort($result['book_list'], function($a, $b) {
+                $book_sort = $this->book_sort;
                 return $a[$book_sort] <=> $b[$book_sort];
             });
 
@@ -275,7 +279,8 @@ class Renderer implements RendererInterface
             }
         }
 
-        usort($result, function($a, $b, $book_sort) {
+        usort($result, function($a, $b) {
+            $book_sort = $this->book_sort;
             return $a[$book_sort] <=> $b[$book_sort];
         });
 
