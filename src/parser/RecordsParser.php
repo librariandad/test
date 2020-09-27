@@ -163,7 +163,7 @@ class RecordsParser implements RecordsParserInterface
             // validate the record data and store invalid records for the report
             $validationRules = $data['validation'];
             $invalidRecords = self::validate($records, $validationRules);
-            $result['invalid'] = self::recordSort(array_values($invalidRecords), $sortField);
+            $result['invalid'] = self::recordSort($invalidRecords['records'], $sortField);
             
             // compile list of all listing groups in page map
             $groups = array();
@@ -241,7 +241,8 @@ class RecordsParser implements RecordsParserInterface
     private static function validate(array $records, array $validationRules): array
     {
         // initialize return array
-        $invalidRecords = array();
+        $invalidRecords['labels'] = array();
+        $invalidRecords['records'] = array();
 
         // for each book in the file
         foreach ($records as $offset => $record) {
@@ -254,7 +255,8 @@ class RecordsParser implements RecordsParserInterface
 
                     // if the data is invalid, store the record and the corresponding label for debugging
                     if ($valid == false) {
-                        array_push($invalidRecords, [$label => $record]);
+                        array_push($invalidRecords['labels'], $label);
+                        array_push( $invalidRecords['records'], $record);
                     }
                 }
 
