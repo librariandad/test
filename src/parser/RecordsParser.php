@@ -143,7 +143,7 @@ class RecordsParser implements RecordsParserInterface
         $result = array();
 
         //pull in configurations for the sorting and grouping fields
-        $sortField = $data['sort'];
+        $sortField = $data['sortField'];
         $groupField = $data['groupBy']['field'];
         $delim = $data['groupBy']['delim'];
         
