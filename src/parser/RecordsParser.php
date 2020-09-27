@@ -241,7 +241,7 @@ class RecordsParser implements RecordsParserInterface
     private static function validate(array $records, array $validationRules): array
     {
         // initialize return array
-        $result = array();
+        $invalidRecords = array();
 
         // for each book in the file
         foreach ($records as $offset => $record) {
@@ -261,7 +261,7 @@ class RecordsParser implements RecordsParserInterface
             }
         }
         
-        return $result;
+        return $invalidRecords;
     }
     
     /**
