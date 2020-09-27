@@ -212,6 +212,8 @@ class Renderer implements RendererInterface
                 $groups = array_merge($groups, $page);
             }
 
+            // initialize book list in result
+            $result['book_list'] = array();
             // go through list of textbooks
             foreach ($records as $offset => $record) {
                 // check for errors in textbook data
