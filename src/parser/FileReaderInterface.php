@@ -28,7 +28,7 @@ interface FileReaderInterface
      * @param string $sortField is the header label for the sorting field
      * @return array of records
      */
-    public static function readCSV(string $path, array $groupBy, string $sortField):array;
+    public static function readCSV(string $path, string $groupBy, string $sortField):array;
 
     /**
      * readJSON() reads a json file and checks it for the expected top-level element.
