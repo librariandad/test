@@ -51,18 +51,8 @@ class FileReader implements FileReaderInterface
 
         }
 
-        $data = $reader->getRecords();
-
-        foreach($data as $row) {
-            $record = array();
-            foreach ($row as $field => $value) {
-                $record[$field] = $value;
-            }
-            array_push($result, $record);
-        }
-
-        // read rows into an array, keyed to headers
-        return $result;
+        // return array of records
+        return iterator_to_array($reader->getRecords());
     }
 
     /**

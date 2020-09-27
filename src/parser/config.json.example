@@ -1,14 +1,14 @@
 {
   "paths": {
-    "base_path": "/path/to/document/root/",
-    "record_data": "data/records.csv",
-    "page_map": "data/page_map.json"
+    "basePath": "/path/to/document/root/",
+    "recordData": "data/records.csv",
+    "pageMap": "data/page_map.json"
   },
-  "group_by": {
+  "groupBy": {
     "field": "Course",
     "delim": "|"
   },
-  "sort_field": "Author",
+  "sortField": "Author",
   "validation": {
     "Title": {
       "method": "stringVal"

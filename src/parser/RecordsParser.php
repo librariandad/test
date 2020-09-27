@@ -8,7 +8,7 @@
  * @copyright (c) Oakland University William Beaumont (OUWB) Medical Library
  * @license MIT
  * 
- * @expects a json configuration file (default path: __DIR__."/config.json.example")
+ * @expects a json configuration file (default path: __DIR__."/config.json")
  * @expects a json page map file containing a top level key {'pages': 
  * @expects a CSV spreadsheet of records with a header row of field names
  * 
@@ -61,20 +61,20 @@ class RecordsParser implements RecordsParserInterface
     {
         // sanitize inputs
         $pageID = filter_var($pageIdRaw, FILTER_SANITIZE_STRING);
-        $config_path = filter_var($configPathRaw, FILTER_SANITIZE_STRING);
+        $configPath = filter_var($configPathRaw, FILTER_SANITIZE_STRING);
 
         // set up error handling, read configurations, etc.
-        $config = Bootstrap::bootstrap($config_path);
+        $config = Bootstrap::bootstrap($configPath);
 
         // get paths for records and page map data
-        $basePath = $config['paths']['base_path'];
+        $basePath = $config['paths']['basePath'];
 
         // get pageMap data
-        $mapPath = $basePath.$config['paths']['page_map'];
+        $mapPath = $basePath.$config['paths']['pageMap'];
         $pageMap = self::getPageMap($mapPath);
         
         // get record data
-        $dataPath = $basePath.$config['paths']['record_data'];
+        $dataPath = $basePath.$config['paths']['recordData'];
         $recordData = self::getRecordData($dataPath, $config);
 
         // parse the record data according to the page map for the page specified by $pageID
@@ -82,7 +82,8 @@ class RecordsParser implements RecordsParserInterface
     }
 
     /**
-     * getPageMap() checks the path for a json file containing top level element 'pages'.
+     * getPageMap() checks the path for a json file containing top level element 'pages'
+     * and returns the page map data within.
      * 
      * @param string $path is the file path
      * @return array is an array of the contents of the 'pages' element
@@ -91,49 +92,62 @@ class RecordsParser implements RecordsParserInterface
     private static function getPageMap(string $path): array
     {
         // load page map data for courses
-        $page_data = FileReader::readJSON($path, 'pages');
+        $pageData = FileReader::readJSON($path, 'pages');
         
-        return $page_data['pages'];
+        return $pageData['pages'];
     }
 
     /**
-     * getRecordData() checks the path for a CSV file of records
-     * @param string $path
-     * @param array $config
-     * @return array
-     * @throws \Exception
+     * getRecordData() checks the path for a CSV file of records containing header labels
+     * for grouping and sorting fields, and returns an array of the records, the expected
+     * fields, and validation rules specified in configurations
+     * 
+     * @param string $path is the path to the records CSV file
+     * @param array $config is the configurations
+     * @return array of records, required field labels, and validation rules
+     * @throws \Exception if unable to load CSV file or if CSV file does not contain required labels
      */
     private static function getRecordData(string $path, array $config): array
     {
         $recordData = array();
         // get the textbook data records
-        $recordData['records'] = FileReader::readCSV($path, $config['group_by'], $config['sort_field']);
+        $recordData['records'] = FileReader::readCSV($path, $config['groupBy'], $config['sortField']);
         // get the validation methods for the data
         $recordData['validation'] = $config['validation'];
         // get the field data will be grouped by from the config file
-        $recordData['group_by'] = $config['group_by'];
+        $recordData['groupBy'] = $config['groupBy'];
         // get the field data will be sorted by from the config file
-        $recordData['sort'] = $config['sort_field'];
+        $recordData['sortField'] = $config['sortField'];
 
         return $recordData;
     }
     
     /**
-     * @param string $pageID
-     * @param array $pageMap
-     * @param array $data
-     * @return array
-     * @throws \Exception
+     * parseData() parses records and groups them by set of groups in the specified grouping field, 
+     * sorting the records by the specified sorting field, and organizes the groups according to
+     * the page map.
+     * 
+     * In debug mode, the record data is validated and records are placed into a single list, 
+     * sorted by the sorting field.  A list of records that failed validation is also generated
+     * for review.
+     * 
+     * @param string $pageID is the id used to identify the page (or for debug mode)
+     * @param array $pageMap is the page map data
+     * @param array $data contains records, grouping and sorting fields, and validation rules
+     * @return array is an array of records parsed for display
+     * @throws \Exception if unable to parse the data
      */
     private static function parseData(string $pageID, array $pageMap, array $data): array
     {
         // create array for result
         $result = array();
 
-        //pull in configurations
-        $sort_field = $data['sort'];
-        $group_field = $data['group_by']['field'];
-        $delim = $data['group_by']['delim'];
+        //pull in configurations for the sorting and grouping fields
+        $sortField = $data['sort'];
+        $groupField = $data['groupBy']['field'];
+        $delim = $data['groupBy']['delim'];
+        
+        // pull in the records
         $records = $data['records'];
 
         // If the page argument passed is the debug keyword, provide debug report.
@@ -147,9 +161,9 @@ class RecordsParser implements RecordsParserInterface
         if ( $pageID == self::PARSE_DEBUG ) {
             
             // validate the record data and store invalid records for the report
-            $validation_rules = $data['validation'];
-            $invalid_records = self::validate($records, $validation_rules);
-            $result['invalid'] = self::bookSort($invalid_records, $sort_field);
+            $validationRules = $data['validation'];
+            $invalidRecords = self::validate($records, $validationRules);
+            $result['invalid'] = self::bookSort($invalidRecords, $sortField);
             
             // compile list of all listing groups in page map
             $groups = array();
@@ -158,64 +172,73 @@ class RecordsParser implements RecordsParserInterface
             }
 
             // initialize record list in result
-            $result['record_list'] = array();
-            // go through list of parser
+            $result['recordList'] = array();
+            // compile a list of all records, including the set of groups to which they belong
             foreach ($records as $offset => $record) {
                 
                 // compile list of listing group names, keyed on the group id, for display
-                $record['group_list'] = array();
-                $key_array = explode($delim, $record[$group_field]);
-                foreach ($key_array as $group_id) {
-                    array_push($record['group_list'], $groups[$group_id]);
+                $record['groupList'] = array();
+                $keyArray = explode($delim, $record[$groupField]);
+                foreach ($keyArray as $groupID) {
+                    array_push($record['groupList'], $groups[$groupID]);
                 }
 
                 // add record to the record list
-                array_push($result['record_list'], $record);
+                array_push($result['recordList'], $record);
             }
 
-            // sort record_list
-            $result['record_list'] = self::bookSort($result['record_list'], $sort_field);
+            // sort record list
+            $result['recordList'] = self::bookSort($result['recordList'], $sortField);
 
+        // if the page id exists in the page map, create lists of records for each group in that page
         } elseif ( array_key_exists($pageID, $pageMap) ) {
-            // render requested page
-            $groups = $pageMap;
-            // create an array for each course containing the course name and a book list
-            foreach ($groups as $group_id => $group_name) {
-                $result[$group_id]['group_name'] = $group_name;
-                $result[$group_id]['book_list'] = array();
+            // get the list of groups in the specified page
+            $groups = $pageMap[$pageID];
+            // create an array for each group containing the group name and a list of records
+            foreach ($groups as $groupID => $groupName) {
+                $result[$groupID]['groupName'] = $groupName;
+                $result[$groupID]['recordList'] = array();
             }
 
-            // for each book that has the course id, append it to the book list
+            // add records to their corresponding group lists
             foreach ($records as $offset => $record) {
-                // explode the list of courses for the textbook
-                $key_array = explode($delim, $record[$group_field]);
-                // for each course
-                foreach ($key_array as $key) {
-                    // if the course is on the current page
+                // get the list of groups in the record's groupBy field
+                $keyArray = explode($delim, $record[$groupField]);
+                // add the record to each group in the list
+                foreach ($keyArray as $key) {
                     if ( array_key_exists($key, $result) ) {
-                        array_push($result[$key]['book_list'], $record);
+                        array_push($result[$key]['recordList'], $record);
                     }
                 }
             }
 
-            // sort result array by courses
+            // sort list groups for the current page by group name
             usort($result, function($a, $b) {
                 return $a <=> $b;
             });
 
-            // sort books in each course
+            // sort the records in each group by the sorting field
             foreach ($result as $course => $array) {
-                $result[$course]['book_list'] = self::bookSort($result[$course]['book_list'], $sort_field);
+                $result[$course]['recordList'] = self::bookSort($result[$course]['recordList'], $sortField);
             }
         } else {
             // if the page ID is not in the page map then throw an exception
             throw new \Exception($pageID." not in page map.");
         }
-        
+
+        // return the parsed array of records for display
         return $result;
     }
-    
-    private static function validate($records, $validation_rules): array
+
+    /**
+     * validate() goes through the list of records and validates the data according to
+     * the validation rules in the configurations.
+     *
+     * @param array $records is the array of records to be validated
+     * @param array $validationRules is an array of validation rules
+     * @return array is an array of invalid records for the debug report
+     */
+    private static function validate(array $records, array $validationRules): array
     {
         
         // TODO: add validation failure data to result
@@ -229,12 +252,12 @@ class RecordsParser implements RecordsParserInterface
             foreach ($record as $label => $value) {
 
                 // if the field has a validation method defined, validate the value
-                if (array_key_exists($label, $validation_rules)) {
-                    $valid = Validator::validateData($value, $validation_rules[$label]);
+                if (array_key_exists($label, $validationRules)) {
+                    $valid = Validator::validateData($value, $validationRules[$label]);
 
                     // if the data is invalid, store the record for debugging
                     if ($valid == false) {
-                        array_push($invalid_records, $record);
+                        array_push($invalidRecords, $record);
                     }
                 }
 
@@ -245,17 +268,18 @@ class RecordsParser implements RecordsParserInterface
     }
     
     /**
-     * bookSort() sorts a list of books by the specified field
-     * @param array $book_list
-     * @param string $sort_field
-     * @return array
+     * recordSort() sorts a list of records by the specified field
+     *
+     * @param array $recordList is the list of records
+     * @param string $sortField is the field by which to sort the records
+     * @return array of sorted records
      */
-    private static function bookSort(array $book_list, string $sort_field): array
+    private static function bookSort(array $recordList, string $sortField): array
     {
-        usort($book_list, function($a, $b) use ($sort_field) {
-            return $a[$sort_field] <=> $b[$sort_field];
+        usort($recordList, function($a, $b) use ($sortField) {
+            return $a[$sortField] <=> $b[$sortField];
         });
 
-        return $book_list;
+        return $recordList;
     }
 }
