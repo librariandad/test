@@ -236,13 +236,10 @@ class RecordsParser implements RecordsParserInterface
      *
      * @param array $records is the array of records to be validated
      * @param array $validationRules is an array of validation rules
-     * @return array is an array of invalid records for the debug report
+     * @return array is an array of invalid records and their corresponding label for the debug report
      */
     private static function validate(array $records, array $validationRules): array
     {
-        
-        // TODO: add validation failure data to result
-        
         // initialize return array
         $result = array();
 
@@ -255,9 +252,9 @@ class RecordsParser implements RecordsParserInterface
                 if (array_key_exists($label, $validationRules)) {
                     $valid = Validator::validateData($value, $validationRules[$label]);
 
-                    // if the data is invalid, store the record for debugging
+                    // if the data is invalid, store the record and the corresponding label for debugging
                     if ($valid == false) {
-                        array_push($invalidRecords, $record);
+                        array_push($invalidRecords, ["label" => $label, "record" = $record]);
                     }
                 }
 
