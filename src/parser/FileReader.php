@@ -29,9 +29,6 @@ class FileReader implements FileReaderInterface
      */
     public static function readCSV(string $path, string $groupBy, string $sortField): array
     {
-        // build result array
-        $result = array();
-
         // open the CSV in read mode
         $reader = Csv\Reader::createFromPath($path, 'r');
 
@@ -42,12 +39,12 @@ class FileReader implements FileReaderInterface
         $headers = $reader->getHeader();
         if  ( ! Validator::validateData($groupBy, ["method" => "in", "args" => $headers]) )
         {
-            throw new \Exception("Record data file does not have expected header ".$groupBy);
+            throw new \Exception("Record data file does not have expected header '".$groupBy."'");
         }
 
         if ( ! Validator::validateData($sortField, ["method" => "in", "args" => $headers]) )
         {
-            throw new \Exception("Record data file does not have expected header ".$sortField);
+            throw new \Exception("Record data file does not have expected header '".$sortField."'");
 
         }
 
@@ -65,13 +62,14 @@ class FileReader implements FileReaderInterface
      */
     public static function readJSON(string $path, string $test): array
     {
-        // open and decode file into an array
+
+        // open and decode json file at $path
         $file = file_get_contents($path);
         $result = json_decode($file, true);
 
         // check whether array contains expected key
         if ( ! isset($result[$test])) {
-            throw new \Exception('File '.$path.' does not contain array with key '.$test);
+            throw new \Exception("File ".$path." does not contain array with key '".$test."'");
         }
 
         return $result;
