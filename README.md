@@ -12,7 +12,7 @@ Author: [Keith Engwall <engwall@oakland.edu>](mailto:engwall@oakland.edu)
 License: [MIT](https://opensource.org/licenses/MIT)
 
 ##Description
-The Medlib\Parser component will parse a CSV file 
+The Medlib\Parser package will parse a CSV file 
 of records for display as one or more record lists 
 on one or more webpages.
 

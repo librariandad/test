@@ -70,11 +70,11 @@ class RecordsParser implements RecordsParserInterface
         $basePath = $config['paths']['basePath'];
 
         // get pageMap data
-        $mapPath = $basePath.$config['paths']['pageMap'];
+        $mapPath = $config['paths']['pageMap'];
         $pageMap = self::getPageMap($mapPath);
         
         // get record data
-        $dataPath = $basePath.$config['paths']['recordData'];
+        $dataPath = $config['paths']['recordData'];
         $recordData = self::getRecordData($dataPath, $config);
 
         // parse the record data according to the page map for the page specified by $pageID

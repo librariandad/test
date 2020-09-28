@@ -6,7 +6,12 @@ Author: [Keith Engwall <engwall@oakland.edu>](mailto:engwall@oakland.edu)
 License: [MIT](https://opensource.org/licenses/MIT)
 
 ## Overview
-The Medlib\Parser component consists of 
+The Medlib\Parser is a parsing engine that
+will transform a CSV file of records into a validated array
+structured for display of the records in set of grouped lists
+on one or more pages.
+
+The Medlib\Parser package consists of 
 
 * a RecordsParser class
 
@@ -18,7 +23,7 @@ containing a set of record-list groups to be displayed on the page
 map and records file, the grouping and sorting field labels,
 and rules to be used to validate data in specified fields
 
-The component is accessed via the static method 
+The parser is accessed via the static method 
 `RecordsParser::parseRecords(string $pageID): array`.
 
 Passing a `string $pageID` to the method will return an `array`

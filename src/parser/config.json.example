@@ -1,8 +1,7 @@
 {
   "paths": {
-    "basePath": "/path/to/document/root/",
-    "recordData": "data/records.csv",
-    "pageMap": "data/page_map.json"
+    "recordData": "/path/to/data/records.csv",
+    "pageMap": "/path/to/data/page_map.json"
   },
   "groupBy": {
     "field": "Course",
@@ -22,9 +21,6 @@
         "Required",
         "Recommended"
       ]
-    },
-    "ISBN": {
-      "method": "isbn"
     },
     "URL": {
       "method": "url"
