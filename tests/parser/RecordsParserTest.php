@@ -3,30 +3,18 @@
 namespace Medlib\Parser;
 
 use PHPUnit\Framework\TestCase;
-use Monolog\Logger;
+
+use Medlib\Parser\RecordsParser;
 
 class RecordsParserTest extends TestCase
 {
-    public function setup():void
-    {
-        $_SERVER['DOCUMENT_ROOT'] = dirname(__DIR__);
-    }
 
-    public function testConstants()
-    {
-        $this->assertEquals($_SERVER['DOCUMENT_ROOT'].'/src/config.php',RecordsParser::CONFIG_PATH);
-        $this->assertIsString(RecordsParser::PARSE_DEBUG);
-    }
-
-    public function testFaultyConfig()
-    {
+    public function testInvalidPageRequest()  {
         $this->expectException(\Exception::class);
-        RecordsParser::parseRecords("M1","/");
+        RecordsParser::parseRecords("bleah");
     }
 
-    public function tearDown(): void
-    {
-        unset($_SERVER['DOCUMENT_ROOT']);
+    public function testDebugRequest() {
+        $this->assertIsArray(RecordsParser::parseRecords("DEBUG", "src/parser/config.json.example"));
     }
-
 }

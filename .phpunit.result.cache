@@ -1,0 +1,1 @@
+C:37:"PHPUnit\Runner\DefaultTestResultCache":308:{a:2:{s:7:"defects";a:2:{s:55:"Medlib\Parser\RecordsParserTest::testInvalidPageRequest";i:3;s:49:"Medlib\Parser\RecordsParserTest::testDebugRequest";i:4;}s:5:"times";a:2:{s:55:"Medlib\Parser\RecordsParserTest::testInvalidPageRequest";d:0.007;s:49:"Medlib\Parser\RecordsParserTest::testDebugRequest";d:0.002;}}}
