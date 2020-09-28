@@ -28,12 +28,12 @@ a list of all records as well as a validation report, in
 order to easily check the data for errors.
 
 ## Table of Contents
-* [Overview](file://doc/Overview.md)
-* [Installation](file://doc/Installation.md)
+* [Overview](doc/Overview.md)
+* [Installation](doc/Installation.md)
 
 
 
 
 ##
 
-Next: [Overview](file://doc/Overview.md)
+Next: [Overview](doc/Overview.md)
