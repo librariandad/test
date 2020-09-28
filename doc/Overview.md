@@ -33,6 +33,6 @@ the check.
 
 ##
 
-Previous: [Home](file://../README.md)
+Previous: [Home](../README.md)
 
-Next: [Installation](file://Installation.md)
+Next: [Installation](Installation.md)
