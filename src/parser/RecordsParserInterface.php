@@ -1,7 +1,7 @@
 <?php
 
 /**
- * This file is part of the Medlib\Parser component.
+ * This file is part of the OUWBMedlib\Parser component.
  *
  * @fileName RecordsParserInterface.php
  * @version 0.1
@@ -11,7 +11,7 @@
  *
  */
 
-namespace Medlib\Parser;
+namespace OUWBMedlib\Parser;
 
 /**
  * Interface RecordsParserInterface

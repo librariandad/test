@@ -1,6 +1,6 @@
 <?php
 /**
- * This file is part of the Medlib\Parser component.
+ * This file is part of the OUWBMedlib\Parser component.
  *
  * @fileName RecordsParser.php
  * @version 0.1
@@ -32,7 +32,7 @@
 
 declare(strict_types=1);
 
-namespace Medlib\Parser;
+namespace OUWBMedlib\Parser;
 
 /**
  * @className RecordsParser

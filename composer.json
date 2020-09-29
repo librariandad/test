@@ -1,5 +1,5 @@
 {
-    "name": "medlib/parser",
+    "name": "ouwbmedlib/parser",
     "description": "parses csv textbook file into web display",
     "type": "library",
     "readme": "README.md",
@@ -24,10 +24,10 @@
         "phpunit/phpunit": "^9.3.11"
     },
     "autoload": {
-        "psr-4": {"Medlib\\Parser\\": "src/parser"}
+        "psr-4": {"OUWBMedlib\\Parser\\": "src/parser"}
     },
     "autoload-dev": {
-        "psr-4": {"Medlib\\Parser\\": "tests/parser" }
+        "psr-4": {"OUWBMedlib\\Parser\\": "tests/parser" }
     },
     "config": {
         "bin-dir": "vendor/bin",

@@ -1,6 +1,6 @@
 <?php
 
-namespace Medlib\Parser;
+namespace OUWBMedlib\Parser;
 
 use PHPUnit\Framework\TestCase;
 

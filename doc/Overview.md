@@ -1,4 +1,4 @@
-# Medlib\Parser
+# OUWBMedlib\Parser
 (c) 2020 Oakland University William Beaumont Medical Library
 
 Author: [Keith Engwall <engwall@oakland.edu>](mailto:engwall@oakland.edu)
@@ -6,12 +6,12 @@ Author: [Keith Engwall <engwall@oakland.edu>](mailto:engwall@oakland.edu)
 License: [MIT](https://opensource.org/licenses/MIT)
 
 ## Overview
-The Medlib\Parser is a parsing engine that
+The OUWBMedlib\Parser is a parsing engine that
 will transform a CSV file of records into a validated array
 structured for display of the records in set of grouped lists
 on one or more pages.
 
-The Medlib\Parser package consists of 
+The OUWBMedlib\Parser package consists of 
 
 * a RecordsParser class
 

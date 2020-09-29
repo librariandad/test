@@ -1,6 +1,6 @@
 <?php
 /**
- * This file is part of the Medlib\Parser component.
+ * This file is part of the OUWBMedlib\Parser component.
  *
  * This class contains static methods for reading files.
  *
@@ -11,7 +11,7 @@
  * @license MIT
  */
 
-namespace Medlib\Parser;
+namespace OUWBMedlib\Parser;
 
 /**
  * Interface FileReaderInterface

@@ -12,7 +12,7 @@
  * @license MIT
  */
 
-namespace Medlib\Parser;
+namespace OUWBMedlib\Parser;
 
 use Whoops\Exception\Inspector;
 use Whoops\Handler\PrettyPageHandler;

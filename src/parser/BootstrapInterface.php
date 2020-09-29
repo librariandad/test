@@ -1,6 +1,6 @@
 <?php
 /**
- * This file is part of the Medlib\Parser component.
+ * This file is part of the OUWBMedlib\Parser component.
  *
  * @fileName BootstrapInterface.php
  * @version 0.1
@@ -9,7 +9,7 @@
  * @license MIT
  */
 
-namespace Medlib\Parser;
+namespace OUWBMedlib\Parser;
 
 /**
  * Interface BootstrapInterface

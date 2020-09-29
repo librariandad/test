@@ -1,10 +1,4 @@
-
-
-
-
-
-
-# Medlib\Parser
+# OUWBMedlib\Parser
 (c) 2020 Oakland University William Beaumont Medical Library
 
 Author: [Keith Engwall <engwall@oakland.edu>](mailto:engwall@oakland.edu)
@@ -12,7 +6,7 @@ Author: [Keith Engwall <engwall@oakland.edu>](mailto:engwall@oakland.edu)
 License: [MIT](https://opensource.org/licenses/MIT)
 
 ## Description
-The Medlib\Parser package will parse a CSV file 
+The OUWBMedlib\Parser package will parse a CSV file 
 of records for display as one or more record lists 
 on one or more webpages.
 
@@ -30,6 +24,7 @@ order to easily check the data for errors.
 ## Table of Contents
 * [Overview](doc/Overview.md)
 * [Installation](doc/Installation.md)
+* [Usage](doc/Usage.md)
 
 
 

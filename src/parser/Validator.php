@@ -1,7 +1,7 @@
 <?php
 
 /**
- * This file is part of the Medlib\Parser component.
+ * This file is part of the OUWBMedlib\Parser component.
  *
  * This class contains the static validateData() method that validates a string of data
  * according to a specified rule.
@@ -15,7 +15,7 @@
  *
  */
 
-namespace Medlib\Parser;
+namespace OUWBMedlib\Parser;
 
 /**
  * Class Validator

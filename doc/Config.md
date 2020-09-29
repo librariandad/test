@@ -1,4 +1,4 @@
-# Medlib\Parser
+# OUWBMedlib\Parser
 (c) 2020 Oakland University William Beaumont Medical Library
 
 Author: [Keith Engwall <engwall@oakland.edu>](mailto:engwall@oakland.edu)
@@ -16,7 +16,7 @@ License: [MIT](https://opensource.org/licenses/MIT)
     * [Validation](#Validation)
 
 ### Overview
-The `config.json` file contains the configurations for the Medlib\Parser package. 
+The `config.json` file contains the configurations for the OUWBMedlib\Parser package. 
 By default, the package looks for this file in the `src/parser` directory*.
 An [example file](../src/config.json.example) is provided within the `src/parser` 
 directory, and should be renamed to `config.json` once you have entered your
