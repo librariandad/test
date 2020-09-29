@@ -1,6 +1,8 @@
 {
     "name": "ouwbmedlib/parser",
     "description": "parses csv textbook file into web display",
+    "keywords": ["csv", "parsing", "transform", "data"],
+    "homepage": "https://github.com/ou-medlib/parser",
     "type": "library",
     "readme": "README.md",
     "license": "MIT",
