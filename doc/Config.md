@@ -5,7 +5,7 @@ Author: [Keith Engwall <engwall@oakland.edu>](mailto:engwall@oakland.edu)
 
 License: [MIT](https://opensource.org/licenses/MIT)
 
-## config.json
+## Config File
 
 * [Overview](#Overview)
 * [Example](#Example)
@@ -17,8 +17,10 @@ License: [MIT](https://opensource.org/licenses/MIT)
 
 ### Overview
 The `config.json` file contains the configurations for the Medlib\Parser package. 
-An [example file](../src/config.json.example) is available within the `src/parser` directory.
-
+By default, the package looks for this file in the `src/parser` directory*.
+An [example file](../src/config.json.example) is provided within the `src/parser` 
+directory, and should be renamed to `config.json` once you have entered your
+configurations.  
 
 The configurations set within the config.json file are:
 
@@ -30,6 +32,11 @@ The configurations set within the config.json file are:
 * **[Validation](#Validation)** rules used to validate data in 
 specified fields
 
+* You may specify an alternate path (including file name) to the 
+Config file when you call the static `parseRecords` method (see 
+[RecordsParser](RecordsParser.md) doc), so you may name it whatever
+you like, so long as it is in the json format below.
+
 ### Example
 Below are the contents of an example `config.json` file:
  ```json
@@ -40,7 +47,7 @@ Below are the contents of an example `config.json` file:
      },
      "groupBy": {
          "field": "Course",
-         "delim": "|"
+         "delim": ";"
      },
      "sortField": "Author",
      "validation": {
@@ -85,7 +92,7 @@ appear on which webpage
 ```json
      "groupBy": {
          "field": "Course",
-         "delim": "|"
+         "delim": ";"
      }
 ```
 The `"groupBy"` element is used to group records into

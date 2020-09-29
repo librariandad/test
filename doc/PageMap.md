@@ -5,7 +5,7 @@ Author: [Keith Engwall <engwall@oakland.edu>](mailto:engwall@oakland.edu)
 
 License: [MIT](https://opensource.org/licenses/MIT)
 
-## page_map.json
+## Page Map File
 * [Overview](#Overview)
 * [Example](#Example)
 * [Contents](#Contents)
@@ -45,6 +45,7 @@ Below are the contents of an example of an example `page_map.json` file:
         },
         "YR3": {
             "MATH320": "Differential Equations",
+            "PHYS205": "Modern Physics",
             "ENG344": "Advanced Creative Writing"
         }
     }
@@ -78,6 +79,12 @@ to identify a group to which a record has been assigned.  The
 The `"<GroupName>"` string may be used as the title of the group's 
 record list as displayed on the page.
 
+Note that the *same Group ID* may be used on multiple pages (see
+PHYS205 in the example above).  This is appropriate if *all
+instances of this group will list the same records*.  If they
+have different record lists, then use *a different group ID*
+with the same group name, and apply the codes as appropriate in
+the [Record Data](RecordData.md) file.
 
 ##
 
