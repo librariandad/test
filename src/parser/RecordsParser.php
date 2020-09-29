@@ -66,9 +66,6 @@ class RecordsParser implements RecordsParserInterface
         // set up error handling, read configurations, etc.
         $config = Bootstrap::bootstrap($configPath);
 
-        // get paths for records and page map data
-        $basePath = $config['paths']['basePath'];
-
         // get pageMap data
         $mapPath = $config['paths']['pageMap'];
         $pageMap = self::getPageMap($mapPath);
