@@ -1,12 +1,12 @@
 <?php
 /**
- * This file is part of the Medlib\Parser component.
+ * This file is part of the OUWBMedlib\Parser component.
  *
  * This class contains the static bootstrap() method that reads a configuration file
  * and sets up error handling.
  *
  * @fileName Bootstrap.php
- * @version 0.1
+ * @version 1.0
  * @author Keith Engwall <engwall@oakland.edu>
  * @copyright (c) Oakland University William Beaumont (OUWB) Medical Library
  * @license MIT

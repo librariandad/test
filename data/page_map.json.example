@@ -1,47 +1,15 @@
 {
   "pages": {
-    "M1": {
+    "YR1": {
       "AFCP": "Anatomical Foundations of Clinical Practice",
       "APM12": "Art &amp; Practice of Medicine 1 &amp; 2",
       "BFCP": "Biomedical Foundations of Clinical Practice",
       "CARDIO": "Cardiovascular",
-      "EMBARK": "Embark",
-      "HEMATO": "Hematopoietic &amp; Lymphoid",
-      "HUM": "Medical Humanities &amp; Clinical Bioethics",
-      "NEURO1": "Neuroscience 1",
-      "PMH": "Promotion &amp; Maintenance of Health",
-      "RESP": "Respiratory"
+      "HUM": "Medical Humanities &amp; Clinical Bioethics"
     },
     "M2": {
       "APM345": "Art &amp; Practice of Medicine 3, 4 &amp; 5",
-      "BEHAV": "Behavioral Science",
-      "EBM": "Integrative Evidence-Based Medicine",
-      "ENDO": "Endocrinology",
-      "GASTRO": "Gastroenterology &amp; Hepatology",
-      "HUM": "Medical Humanities &amp; Clinical Bioethics",
-      "MSK": "Musculoskeletal, Connective Tissue &amp; Skin",
-      "NEURO2": "Neuroscience 2",
-      "PSYCH": "Psychopathology",
-      "RENAL": "Renal &amp; Urinary",
-      "REPRO": "Male &amp; Female Reproductive"
-    },
-    "M3": {
-      "FAMMED": "Family Medicine Clerkship",
-      "HUM": "Medical Humanities &amp; Clinical Bioethics",
-      "INTMED": "Internal Medicine Clerkship",
-      "NEUROLOGY": "Neurology Clerkship",
-      "OBGYN": "OB-GYN Clerkship",
-      "OPHTH": "Ophthalmology Clerkship",
-      "PED": "Pediatrics Clerkship",
-      "PSYCHIATRY": "Psychiatry Clerkship",
-      "SURGERY": "Surgery Clerkship"
-    },
-    "M4": {
-      "ANESTH": "Anesthesiology &amp; Pain Medicine Clerkship",
-      "DIAG": "Diagnostic Medicine Clerkship",
-      "EMERGENCY": "Emergency Medicine Clerkship",
-      "HUM": "Medical Humanities &amp; Clinical Bioethics",
-      "INTMEDM4": "Internal Medicine Sub-Internship"
+      "HUM": "Medical Humanities &amp; Clinical Bioethics"
     }
   }
 }

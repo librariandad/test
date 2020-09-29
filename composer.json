@@ -4,23 +4,20 @@
     "type": "library",
     "readme": "README.md",
     "license": "MIT",
-    "version": "0.9",
     "authors": [
         {
-            "name": "Keith Engwall"
+            "name": "Keith Engwall",
+            "email": "engwall@oakland.edu"
         }
     ],
     "require": {
         "php": ">=7.2",
         "league/csv": "^9.6",
-        "monolog/monolog": "^2.1",
         "respect/validation": "^2.0",
-        "mtdowling/jmespath.php": "^2.6",
         "ext-json": "*"
     },
     "require-dev": {
         "filp/whoops": "^2.7",
-        "mikey179/vfsstream": "^1.6",
         "phpunit/phpunit": "^9.3.11"
     },
     "autoload": {
@@ -31,7 +28,6 @@
     },
     "config": {
         "bin-dir": "vendor/bin",
-        "sort-packages": true
     }
 
 }

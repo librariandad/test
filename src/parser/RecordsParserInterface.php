@@ -4,7 +4,7 @@
  * This file is part of the OUWBMedlib\Parser component.
  *
  * @fileName RecordsParserInterface.php
- * @version 0.1
+ * @version 1.0
  * @author Keith Engwall <engwall@oakland.edu>
  * @copyright (c) Oakland University William Beaumont (OUWB) Medical Library
  * @license MIT
