@@ -27,7 +27,7 @@
         "psr-4": {"OUWBMedlib\\Parser\\": "tests/parser" }
     },
     "config": {
-        "bin-dir": "vendor/bin",
+        "bin-dir": "vendor/bin"
     }
 
 }
